@@ -31,10 +31,7 @@ float PhysicsSystem::m_calcDynamicFriction(
         float sub_dt
 ) {
     auto normal_impulse = normal_lagrange / sub_dt;
-    return fmin(
-            (coef * abs(normal_impulse)),
-            tangent_speed / generalized_inv_mass_sum
-    );
+    return coef * abs(normal_impulse);
 }
 vec2f PhysicsSystem::m_calcContactVel(vec2f vel, float ang_vel, vec2f r) {
     return vel + ang_vel * vec2f(-r.y, r.x);
