@@ -329,7 +329,7 @@ void Demo::onUpdate(const float delta_time, Window& window, KeyboardController& 
     }
 
     static vec2f last_pos;
-    if (controller.get(eKeyMappings::Ability1).held) {
+    if (controller.get(eKeyMappings::Ability1).pressed) {
         last_pos = vec2f(controller.global_mouse_pos());
         Sprite spr = Sprite(crate_texture, {cube_side_len, cube_side_len});
         Rigidbody rb;

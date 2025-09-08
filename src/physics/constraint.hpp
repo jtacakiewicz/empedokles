@@ -24,6 +24,7 @@ struct PositionalCorrectionInfo {
     bool isStatic1;
     float inertia1;
     float mass1;
+    float rot1;
     float generalized_inverse_mass1;
     Entity entity2;
     vec2f center_to_collision2;
@@ -31,6 +32,7 @@ struct PositionalCorrectionInfo {
     float inertia2;
     float mass2;
     float generalized_inverse_mass2;
+    float rot2;
     PositionalCorrectionInfo() {
     }
     PositionalCorrectionInfo(
@@ -127,7 +129,7 @@ private:
 struct ConstraintSystem : public System<Constraint> {
     typedef const std::vector<Entity>* EntityListRef_t;
     std::vector< EntityListRef_t> getConstrainedGroups() const;
-    void update(float delta_time);
+    void solve(float delta_time);
 };
 }; // namespace emp
 #endif

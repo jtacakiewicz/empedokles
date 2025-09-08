@@ -1,5 +1,6 @@
 #include "physics_system.hpp"
 #include <glm/vector_relational.hpp>
+#include <complex>
 #include <memory>
 #include "core/coordinator.hpp"
 #include "debug/log.hpp"
@@ -30,8 +31,11 @@ float PhysicsSystem::m_calcDynamicFriction(
         float normal_lagrange,
         float sub_dt
 ) {
-    auto normal_impulse = normal_lagrange / sub_dt;
-    return coef * abs(normal_impulse);
+    auto lambda_t = tangent_speed / (generalized_inv_mass_sum * sub_dt);
+    auto max_fric = coef * fabsf(normal_lagrange) / sub_dt;
+    if(lambda_t > max_fric ) return max_fric;
+    if(lambda_t < -max_fric) return max_fric;
+    return lambda_t;
 }
 vec2f PhysicsSystem::m_calcContactVel(vec2f vel, float ang_vel, vec2f r) {
     return vel + ang_vel * vec2f(-r.y, r.x);
@@ -129,7 +133,8 @@ PhysicsSystem::PenetrationConstraint PhysicsSystem::m_handleCollision(
             ),
             penetration,
             normal,
-            delT
+            delT,
+            0.f
     );
     pos1 += penetration_correction.pos1_correction;
     rot1 += penetration_correction.rot1_correction;
@@ -387,6 +392,7 @@ void PhysicsSystem::m_solveVelocities(
                     constraint.info.normal_lagrange,
                     delT
             );
+            EMP_LOG(DEBUG) << friction_impulse;
             p -= tangent_normal * friction_impulse;
         }
         if (!rb1.isStatic) {
@@ -493,13 +499,15 @@ void PhysicsSystem::m_step(
     m_processSleep(delta_time, const_sys);
     rb_sys.integrate(delta_time, DORMANT_TIME_THRESHOLD);
     trans_sys.update();
-    const_sys.update(delta_time);
+    const_sys.solve(delta_time);
     auto potential_pairs = m_broadPhase(col_sys, trans_sys);
     auto penetrations = m_narrowPhase(col_sys, potential_pairs, delta_time);
     
     trans_sys.update();
     rb_sys.deriveVelocities(delta_time, DORMANT_TIME_THRESHOLD);
     m_solveVelocities(penetrations, delta_time);
+    // const_sys.solve_velocities(delta_time);
+
     m_broadcastCollisionMessages(penetrations);
 }
 void PhysicsSystem::update(

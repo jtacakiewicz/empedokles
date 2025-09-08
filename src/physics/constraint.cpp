@@ -73,12 +73,12 @@ PositionalCorrResult calcPositionalCorrection(
     if (!info.isStatic1) {
         result.pos1_correction = p / info.mass1;
         result.rot1_correction =
-                perp_dot(info.center_to_collision1, p) / info.inertia1;
+                0.5f * delta_lagrange * perp_dot(info.center_to_collision1, normal) / info.inertia1;
     }
     if (!info.isStatic2) {
         result.pos2_correction = -p / info.mass2;
         result.rot2_correction =
-                -perp_dot(info.center_to_collision2, p) / info.inertia2;
+                -0.5f * delta_lagrange * perp_dot(info.center_to_collision2, normal) / info.inertia2;
     }
     result.delta_lagrange = delta_lagrange;
 
@@ -449,7 +449,7 @@ std::vector< ConstraintSystem::EntityListRef_t> ConstraintSystem::getConstrained
     }
     return result;
 }
-void ConstraintSystem::update(float delta_time) {
+void ConstraintSystem::solve(float delta_time) {
     std::vector<Entity> v(entities.begin(), entities.end());
     std::shuffle(v.begin(), v.end(), std::mt19937{std::random_device{}()});
     for (auto e : v) {
