@@ -7,4 +7,3 @@ out
 imgui.ini
 tmux-session.sh
 *.spv
-*.nix
