@@ -20,7 +20,7 @@ Texture::Texture(std::string model_id)
         m_id = "default";
     }
 }
-std::unordered_map<std::string, std::unique_ptr<TextureAsset>> Texture::m_tex_table;
+AssetRegistry<TextureAsset> Texture::m_assets;
 TextureAsset::TextureAsset(Device &device, const std::string &textureFilepath)
     : m_device { device }
 {
