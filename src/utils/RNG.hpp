@@ -17,30 +17,33 @@ private:
     std::uniform_int_distribution<rng_type::result_type> s_udist;
 
 public:
-    void Seed(unsigned int seed_val) {
-        rng_type::result_type const seedval =
-                static_cast<uint32_t>(seed_val); // get this from somewhere
+    void Seed(unsigned int seed_val)
+    {
+        const rng_type::result_type seedval = static_cast<uint32_t>(seed_val);  //  get this from somewhere
         s_rng.seed(seedval);
     }
-    // returns float in the range from 0 to 1
-    float Random() {
+    //  returns float in the range from 0 to 1
+    float Random()
+    {
         rng_type::result_type random_number = s_udist(s_rng);
         return (float)random_number / (float)0xFFFFFFFF;
     }
-    // specify lowest value to be generated and high value which are bounds
-    template <class T>
-    T Random(T low, T high) {
+    //  specify lowest value to be generated and high value which are bounds
+    template <class T> T Random(T low, T high)
+    {
         T diff = high - low;
         return low + (T)((float)diff * Random());
     }
-    RNG(float seed = 0) {
-        if (seed == 0) {
+    RNG(float seed = 0)
+    {
+        if(seed == 0) {
             uint32_t t = static_cast<uint32_t>(time(nullptr));
             std::hash<uint32_t> hasher;
             size_t hashed = hasher(t);
             this->Seed(static_cast<uint32_t>(hashed));
-        } else
+        } else {
             this->Seed(seed);
+        }
     }
 };
 

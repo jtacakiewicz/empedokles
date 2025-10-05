@@ -9,7 +9,7 @@ layout (binding = 1, rgba8) uniform writeonly image2D outputImage;
 vec4 scientificColorMap(float value) {
     // Clamp the input to the 0.0 - 1.0 range to avoid out-of-bounds values
     value = clamp(value, 0.0, 1.0);
-    
+
     // Define the colors at key points along the 0-1 range
     vec4 colorA = vec4(0.0, 0.0, 0.3, 1);  // Dark blue at 0.0
     colorA = vec4(0.0, 0.0, 0.05, 1);  // Dark blue at 0.0

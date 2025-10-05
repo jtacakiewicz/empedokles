@@ -15,46 +15,30 @@ public:
 
     ~Window();
 
-    Window(const Window&) = delete;
+    Window(const Window &) = delete;
 
-    Window& operator=(const Window&) = delete;
+    Window &operator=(const Window &) = delete;
 
-    bool shouldClose() {
-        return glfwWindowShouldClose(window);
-    }
+    bool shouldClose() { return glfwWindowShouldClose(window); }
 
-    VkExtent2D getExtent() const {
-        return {static_cast<uint32_t>(width), static_cast<uint32_t>(height)};
-    }
+    VkExtent2D getExtent() const { return { static_cast<uint32_t>(width), static_cast<uint32_t>(height) }; }
     struct Size {
         int width;
         int height;
     };
-    Size getSize() const {
-        return {width, height};
-    }
+    Size getSize() const { return { width, height }; }
 
-    bool wasWindowResized() const {
-        return framebufferResized;
-    }
+    bool wasWindowResized() const { return framebufferResized; }
 
-    void resetWindowResizedFlag() {
-        framebufferResized = false;
-    }
+    void resetWindowResizedFlag() { framebufferResized = false; }
 
-    [[nodiscard]] GLFWwindow* getGLFWwindow() const {
-        return window;
-    }
+    [[nodiscard]] GLFWwindow *getGLFWwindow() const { return window; }
 
-    void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
+    void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
 
 private:
-    static void framebufferResizeCallback(
-            GLFWwindow* window, int width, int height
-    );
-    static void windowResizeCallback(
-            GLFWwindow* window, int width, int height
-    );
+    static void framebufferResizeCallback(GLFWwindow *window, int width, int height);
+    static void windowResizeCallback(GLFWwindow *window, int width, int height);
 
     void initWindow();
 
@@ -65,8 +49,8 @@ private:
     bool framebufferResized = false;
 
     std::string windowName;
-    GLFWwindow* window{};
+    GLFWwindow *window {};
 };
-} // namespace emp
+}  //  namespace emp
 
 #endif

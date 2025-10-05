@@ -4,11 +4,10 @@
 #include "core/system.hpp"
 #include <set>
 namespace emp {
-    struct Hierarchy {
-        Entity parent;
-        std::set<Entity> children;
-    };
-    class HierarchySystem : public System {
-    };
+struct Hierarchy {
+    Entity parent;
+    std::set<Entity> children;
+};
+class HierarchySystem : public System { };
 };
 #endif

@@ -8,5 +8,5 @@ struct Material {
     float restitution = 0.1;
     float air_friction = 5.0f;
 };
-}; // namespace emp
+};  //  namespace emp
 #endif

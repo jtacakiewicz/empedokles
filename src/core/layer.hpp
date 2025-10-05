@@ -10,4 +10,4 @@ const Layer INVALID_LAYER = UINT8_MAX;
 typedef std::bitset<MAX_LAYERS> LayerMask;
 
 };
-#endif //EMP_LAYEr_HPP
+#endif  //  EMP_LAYEr_HPP

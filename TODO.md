@@ -12,7 +12,7 @@
     - instanced rendering for sprites
     - 2d lighting
 - core
-    - serialization 
+    - serialization
     - message bus
 - networking?
 
@@ -34,8 +34,8 @@
     - added more constraints
         - anchored swivel
         - unanchored swivel
-        - anchored fixed 
-        - unanchored fixed 
+        - anchored fixed
+        - unanchored fixed
 - graphics
     - imgui inspector for basic components
     - basic animation system

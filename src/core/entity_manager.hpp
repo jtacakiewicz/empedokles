@@ -18,14 +18,14 @@ public:
     Signature getSignature(Entity entity) const;
 
 private:
-    // Queue of unused entity IDs
-    std::queue<Entity> m_available_entities{};
+    //  Queue of unused entity IDs
+    std::queue<Entity> m_available_entities {};
 
-    // Array of signatures where the index corresponds to the entity ID
+    //  Array of signatures where the index corresponds to the entity ID
     std::array<Signature, MAX_ENTITIES> m_signatures;
 
-    // Total living entities - used to keep limits on how many exist
-    uint32_t m_living_entity_count{};
+    //  Total living entities - used to keep limits on how many exist
+    uint32_t m_living_entity_count {};
 };
-}; // namespace emp
+};  //  namespace emp
 #endif

@@ -6,59 +6,43 @@
 
 namespace emp {
 
-bool isTriangulable(const std::vector<vec2f>& points);
-std::vector<Triangle> triangulate(const std::vector<vec2f>& points);
-std::vector<std::vector<vec2f>> triangulateAsVector(
-        const std::vector<vec2f>& points
-);
-std::vector<std::vector<vec2f>> mergeToConvex(
-        const std::vector<std::vector<vec2f>>& polygons
-);
+bool isTriangulable(const std::vector<vec2f> &points);
+std::vector<Triangle> triangulate(const std::vector<vec2f> &points);
+std::vector<std::vector<vec2f>> triangulateAsVector(const std::vector<vec2f> &points);
+std::vector<std::vector<vec2f>> mergeToConvex(const std::vector<std::vector<vec2f>> &polygons);
 
 float calcTriangleVolume(vec2f a, vec2f b, vec2f c);
-// returns true if r1 contains the whole of r2
-bool AABBcontainsAABB(const AABB& r1, const AABB& r2);
-// finds the closest vector to point that lies on ray
+//  returns true if r1 contains the whole of r2
+bool AABBcontainsAABB(const AABB &r1, const AABB &r2);
+//  finds the closest vector to point that lies on ray
 vec2f findClosestPointOnRay(vec2f ray_origin, vec2f ray_dir, vec2f point);
-// finds the closest vetor to point that lies on one of poly's edges
-vec2f findClosestPointOnEdge(vec2f point, const std::vector<vec2f>& poly);
-std::vector<vec2f> findContactPointFast(
-        const ConvexPolygon* p0, const ConvexPolygon* p1, vec2f cn
-);
-// returns all of contact points of 2 polygons
-std::vector<vec2f> findContactPoints(
-        const ConvexPolygon& r1, const ConvexPolygon& r2
-);
-std::vector<vec2f> findContactPoints(
-        const std::vector<vec2f>& p0, const std::vector<vec2f>& p1
-);
-// calculates area of polygon whose center should be at {0, 0}
-float area(const std::vector<vec2f>& model);
+//  finds the closest vetor to point that lies on one of poly's edges
+vec2f findClosestPointOnEdge(vec2f point, const std::vector<vec2f> &poly);
+std::vector<vec2f> findContactPointFast(const ConvexPolygon *p0, const ConvexPolygon *p1, vec2f cn);
+//  returns all of contact points of 2 polygons
+std::vector<vec2f> findContactPoints(const ConvexPolygon &r1, const ConvexPolygon &r2);
+std::vector<vec2f> findContactPoints(const std::vector<vec2f> &p0, const std::vector<vec2f> &p1);
+//  calculates area of polygon whose center should be at {0, 0}
+float area(const std::vector<vec2f> &model);
 vec2f centerOfMass(std::vector<vec2f> model);
-// returns true if a and b are nearly equal
+//  returns true if a and b are nearly equal
 
-// returns true if p is within aabb
-bool isOverlappingPointAABB(const vec2f& p, const AABB& r);
-// returns true if p is within circle
-bool isOverlappingPointCircle(const vec2f& p, const Circle& c);
-// returns true if p is within polygon
-bool isOverlappingPointPoly(
-        const vec2f& p, const std::vector<vec2f>& poly_points
-);
-// returns true if aabb and aabb are overlapping
-bool isOverlappingAABBAABB(const AABB& r1, const AABB& r2);
-float calculateInertia(const std::vector<vec2f>& model, float mass);
+//  returns true if p is within aabb
+bool isOverlappingPointAABB(const vec2f &p, const AABB &r);
+//  returns true if p is within circle
+bool isOverlappingPointCircle(const vec2f &p, const Circle &c);
+//  returns true if p is within polygon
+bool isOverlappingPointPoly(const vec2f &p, const std::vector<vec2f> &poly_points);
+//  returns true if aabb and aabb are overlapping
+bool isOverlappingAABBAABB(const AABB &r1, const AABB &r2);
+float calculateInertia(const std::vector<vec2f> &model, float mass);
 struct MIAInfo {
     float MMOI;
     float mass;
     float area;
     vec2f centroid;
 };
-MIAInfo calculateMassInertiaArea(
-        const std::vector<vec2f>& model,
-        float thickness = 1.f,
-        float density = 1.f
-);
+MIAInfo calculateMassInertiaArea(const std::vector<vec2f> &model, float thickness = 1.f, float density = 1.f);
 
 /**
  * structure containing all info returned by Ray and AABB intersection
@@ -85,9 +69,7 @@ struct IntersectionRayAABBResult {
  * [float]time_hit_near, [float]time_hit_far, [vec2f]contact_normal,
  * [vec2f]contact_point
  */
-IntersectionRayAABBResult intersectRayAABB(
-        vec2f ray_origin, vec2f ray_dir, const AABB& target
-);
+IntersectionRayAABBResult intersectRayAABB(vec2f ray_origin, vec2f ray_dir, const AABB &target);
 
 /**
  * structure containing all info returned by Ray and Ray intersection
@@ -110,20 +92,16 @@ struct IntersectionRayRayResult {
  * @return IntersectionRayRayResult that contains: (in order) [bool]detected,
  * [vec2f]contact_point, [float]t_hit_near0, [float]t_hit_near1
  */
-IntersectionRayRayResult intersectRayRay(
-        vec2f ray0_origin, vec2f ray0_dir, vec2f ray1_origin, vec2f ray1_dir
-);
+IntersectionRayRayResult intersectRayRay(vec2f ray0_origin, vec2f ray0_dir, vec2f ray1_origin, vec2f ray1_dir);
 
 struct IntersectionRayPolygonResult {
     bool detected;
-    // contact normals from polygon
+    //  contact normals from polygon
     vec2f contact_normal;
     vec2f contact_point;
     float overlap;
 };
-IntersectionRayPolygonResult intersectRayPolygon(
-        vec2f ray_origin, vec2f ray_dir, const ConvexPolygon& poly
-);
+IntersectionRayPolygonResult intersectRayPolygon(vec2f ray_origin, vec2f ray_dir, const ConvexPolygon &poly);
 /**
  * structure containing all info returned by Polygon intersection
  *
@@ -144,12 +122,8 @@ struct IntersectionPolygonPolygonResult {
  * @return IntersectionPolygonPolygonResult that contains: (in order)
  * [bool]detected, [vec2f]contact_normal, [float]overlap
  */
-IntersectionPolygonPolygonResult intersectPolygonPolygon(
-        const ConvexPolygon& r1, const ConvexPolygon& r2
-);
-IntersectionPolygonPolygonResult intersectPolygonPolygon(
-        const std::vector<vec2f>& r1, const std::vector<vec2f>& r2
-);
+IntersectionPolygonPolygonResult intersectPolygonPolygon(const ConvexPolygon &r1, const ConvexPolygon &r2);
+IntersectionPolygonPolygonResult intersectPolygonPolygon(const std::vector<vec2f> &r1, const std::vector<vec2f> &r2);
 
 struct IntersectionPolygonCircleResult {
     bool detected;
@@ -162,9 +136,7 @@ struct IntersectionPolygonCircleResult {
  * @return IntaresctionPolygonCircleResult that contains: (in order)
  * [bool]detected, [vec2f]contact_normal, [vec2f]contact_point, [float]overlap
  */
-IntersectionPolygonCircleResult intersectCirclePolygon(
-        const Circle& c, const ConvexPolygon& r
-);
+IntersectionPolygonCircleResult intersectCirclePolygon(const Circle &c, const ConvexPolygon &r);
 
 typedef IntersectionPolygonCircleResult IntersectionCircleCircleResult;
 /**
@@ -172,9 +144,7 @@ typedef IntersectionPolygonCircleResult IntersectionCircleCircleResult;
  * @return IntersectionPolygonPolygonResult that contains: (in order)
  * [bool]detected, [vec2f]contact_normal, [float]overlap
  */
-IntersectionCircleCircleResult intersectCircleCircle(
-        const Circle& c1, const Circle& c2
-);
+IntersectionCircleCircleResult intersectCircleCircle(const Circle &c1, const Circle &c2);
 
-} // namespace emp
+}  //  namespace emp
 #endif

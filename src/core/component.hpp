@@ -3,8 +3,8 @@
 #include <bitset>
 #include <cstdint>
 namespace emp {
-    typedef uint8_t ComponentType;
-    const ComponentType MAX_COMPONENTS = 32;
-    typedef std::bitset<MAX_COMPONENTS> Signature;
+typedef uint8_t ComponentType;
+const ComponentType MAX_COMPONENTS = 32;
+typedef std::bitset<MAX_COMPONENTS> Signature;
 };
 #endif

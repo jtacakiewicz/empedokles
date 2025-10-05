@@ -14,9 +14,9 @@ namespace emp {
 class ParticleRenderSystem {
 public:
     static constexpr uint32_t MAX_PARTICLE_COUNT = 65536U;
-    //float to 4
-    //vec2 to 8
-    //vec3/vec4 to 16
+    //  float to 4
+    //  vec2 to 8
+    //  vec3/vec4 to 16
     struct alignas(16U) ParticleData {
         vec2f position;
         vec2f velocity;
@@ -26,9 +26,10 @@ public:
         static std::vector<VkVertexInputAttributeDescription> getAttributeDescriptions();
     };
     static_assert(sizeof(ParticleData) == 48, "Wrong struct size");
+
 private:
-    VkPipelineLayout compute_pipeline_layout{};
-    VkPipelineLayout graphics_pipeline_layout{};
+    VkPipelineLayout compute_pipeline_layout {};
+    VkPipelineLayout graphics_pipeline_layout {};
     std::unique_ptr<Pipeline> compute_pipeline;
     std::unique_ptr<Pipeline> graphics_pipeline;
 
@@ -41,21 +42,23 @@ private:
     std::unique_ptr<DescriptorPool> compute_pool;
     std::vector<VkDescriptorSet> SSBO_descriptors;
     std::vector<VkDescriptorSet> emit_buffer_descriptors;
-    Device& m_device;
+    Device &m_device;
 
-    void m_initRandomParticles(Device& device, float aspect) {
-    }
+    void m_initRandomParticles(Device &device, float aspect) { }
 
-    void m_setupStorageBuffers(Device& device);
-    void m_setupEmitBuffers(Device& device);
-    void m_setupDescriptorsLayout(Device& device);
-    void m_createPipeline(Device& device, VkRenderPass render_pass, VkDescriptorSetLayout compute_UBO_layout, VkDescriptorSetLayout render_UBO_layout);
+    void m_setupStorageBuffers(Device &device);
+    void m_setupEmitBuffers(Device &device);
+    void m_setupDescriptorsLayout(Device &device);
+    void m_createPipeline(Device &device, VkRenderPass render_pass, VkDescriptorSetLayout compute_UBO_layout,
+                          VkDescriptorSetLayout render_UBO_layout);
+
 public:
-    void compute(const FrameInfo& frame_info, EmitQueue& emit_queue);
-    void render(const FrameInfo& frame_info);
+    void compute(const FrameInfo &frame_info, EmitQueue &emit_queue);
+    void render(const FrameInfo &frame_info);
     ~ParticleRenderSystem();
-    ParticleRenderSystem(Device& device, VkRenderPass render_pass, VkDescriptorSetLayout global_compute_layout, VkDescriptorSetLayout global_render_layout, float aspect);
+    ParticleRenderSystem(Device &device, VkRenderPass render_pass, VkDescriptorSetLayout global_compute_layout,
+                         VkDescriptorSetLayout global_render_layout, float aspect);
 };
 }
 
-#endif // !DEBUG
+#endif  //  !DEBUG

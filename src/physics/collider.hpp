@@ -24,47 +24,44 @@ struct CollisionInfo {
 };
 struct Collider {
     typedef std::vector<vec2f> ConvexVertexCloud;
-    typedef std::function<void(const CollisionInfo&)>  CallbackFunc;
+    typedef std::function<void(const CollisionInfo &)> CallbackFunc;
+
 private:
-    // potentially concave
+    //  potentially concave
     AABB m_extent;
     std::vector<vec2f> m_model_outline;
     std::vector<ConvexVertexCloud> m_model_shape;
+
 public:
     Layer collider_layer = 0;
     bool isNonMoving = true;
 
-    inline const std::vector<vec2f>& model_outline() const {
-        return m_model_outline;
-    }
-    inline const std::vector<ConvexVertexCloud>& model_shape() const {
-        return m_model_shape;
-    }
+    inline const std::vector<vec2f> &model_outline() const { return m_model_outline; }
+    inline const std::vector<ConvexVertexCloud> &model_shape() const { return m_model_shape; }
 
-    std::vector<vec2f> transformed_outline(const Transform& transform) const;
-    std::vector<ConvexVertexCloud> transformed_shape(const Transform& transform) const;
-    ConvexVertexCloud transformed_convex(const Transform& transform, size_t index) const;
+    std::vector<vec2f> transformed_outline(const Transform &transform) const;
+    std::vector<ConvexVertexCloud> transformed_shape(const Transform &transform) const;
+    ConvexVertexCloud transformed_convex(const Transform &transform, size_t index) const;
 
-    inline AABB extent() const {
-        return m_extent;
-    }
+    inline AABB extent() const { return m_extent; }
     Collider() { }
     Collider(std::vector<vec2f> shape, bool correctCOM = false);
     friend ColliderSystem;
 };
 
-// system for updating transfomred collider shapes
+//  system for updating transfomred collider shapes
 class ColliderSystem : public System<Transform, Collider> {
 public:
-    typedef std::function<void(const CollisionInfo&)> CollisionEnterCallback;
+    typedef std::function<void(const CollisionInfo &)> CollisionEnterCallback;
     typedef std::function<void(Entity, Entity)> CollisionExitCallback;
+
 private:
     LayerMask collision_matrix[MAX_LAYERS];
     union FitIntoOne {
         struct {
-            //always lower
+            //  always lower
             Entity a;
-            //always higher 
+            //  always higher
             Entity b;
         };
         uint64_t hash;
@@ -74,16 +71,12 @@ private:
     std::unordered_map<Entity, std::vector<CollisionEnterCallback>> m_enter_callbacks;
     std::unordered_map<Entity, std::vector<CollisionExitCallback>> m_exit_callbacks;
 
-    void callAllOnEnterCallbacksFor(Entity e, const CollisionInfo& info);
+    void callAllOnEnterCallbacksFor(Entity e, const CollisionInfo &info);
     void callAllOnExitCallbacksFor(Entity e, Entity other);
-public:
 
-    ColliderSystem& onCollisionEnter(
-            Entity listener, Entity target, CollisionEnterCallback&& func
-    );
-    ColliderSystem& onCollisionExit(
-            Entity listener, Entity target, CollisionExitCallback&& func
-    );
+public:
+    ColliderSystem &onCollisionEnter(Entity listener, Entity target, CollisionEnterCallback &&func);
+    ColliderSystem &onCollisionExit(Entity listener, Entity target, CollisionExitCallback &&func);
 
     void processCollisionNotifications();
     void notifyOfCollision(Entity a, Entity b, CollisionInfo col_info);
@@ -94,5 +87,5 @@ public:
     void onEntityRemoved(Entity entity) override final;
     ColliderSystem();
 };
-}; // namespace emp
+};  //  namespace emp
 #endif

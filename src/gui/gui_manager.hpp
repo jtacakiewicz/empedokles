@@ -9,7 +9,7 @@
 #include "gui/overlay.hpp"
 #include "gui/spatial_visualizer.hpp"
 
-namespace emp  {
+namespace emp {
 
 class GUIManager {
     bool m_showDemoWindow = false;
@@ -24,29 +24,30 @@ class GUIManager {
     int renderer_time_idx = 0;
     int physics_time_idx = 0;
     int mainUpdate_time_idx = 0;
-    float renderer_time   [TIME_SAMPLE_COUNT] {0};
-    float physics_time    [TIME_SAMPLE_COUNT] {0};
-    float mainUpdate_time [TIME_SAMPLE_COUNT] {0};
+    float renderer_time[TIME_SAMPLE_COUNT] { 0 };
+    float physics_time[TIME_SAMPLE_COUNT] { 0 };
+    float mainUpdate_time[TIME_SAMPLE_COUNT] { 0 };
 
     TreeView m_tree_view;
     Inspector m_inspector;
-    bool* inspectorMaster = nullptr;
+    bool *inspectorMaster = nullptr;
     Console m_console;
     LogWindow m_log_window;
     SpatialVisualizer m_visualizer;
 
     void drawMainMenuBar();
     void drawFPSOverlay();
+
 public:
     void addRendererTime(float time);
     void addPhysicsTime(float time);
     void addUpdateTime(float time);
 
     void alias(Entity entity, std::string name);
-    void draw(Coordinator&, Camera&);
+    void draw(Coordinator &, Camera &);
     GUIManager();
 };
 
 }
 
-#endif // !DEBUG
+#endif  //  !DEBUG

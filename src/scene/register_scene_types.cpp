@@ -14,14 +14,16 @@
 #include "scene/behaviour.hpp"
 
 namespace emp {
-template<class ...T>
-void registerComponents(Coordinator& ECS, TypePack<T...> pack) {
+template <class... T> void registerComponents(Coordinator &ECS, TypePack<T...> pack)
+{
     (ECS.registerComponent<T>(), ...);
 }
-void registerSceneTypes(Coordinator& ECS) {
+void registerSceneTypes(Coordinator &ECS)
+{
     registerComponents(ECS, AllComponentTypes());
 }
-void registerSceneSystems(Device& device, Coordinator& ECS) {
+void registerSceneSystems(Device &device, Coordinator &ECS)
+{
     ECS.registerSystem<AllEntitiesSystem>();
 
     ECS.registerSystem<TransformSystem>();
@@ -35,6 +37,6 @@ void registerSceneSystems(Device& device, Coordinator& ECS) {
     ECS.registerSystem<SpriteSystem>(std::ref(device));
     ECS.registerSystem<AnimatedSpriteSystem>(std::ref(device));
     ECS.registerSystem<ModelSystem>(std::ref(device));
-    ECS.addComponent(ECS.world(), Transform(vec2f(0, 0), 0.f, {1.f, 1.f}));
+    ECS.addComponent(ECS.world(), Transform(vec2f(0, 0), 0.f, { 1.f, 1.f }));
 }
-} // namespace emp
+}  //  namespace emp

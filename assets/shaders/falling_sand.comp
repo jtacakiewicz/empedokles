@@ -12,7 +12,7 @@ layout (set = 0, binding = 2, rgba8) uniform writeonly image2D outputImage;
 void main() {
     vec4 color_sci = vec4(1, 0, 0, 1);
     if(gl_GlobalInvocationID.y >= 255 || gl_GlobalInvocationID.x >= 255 ||
-        gl_GlobalInvocationID.y == 0 || gl_GlobalInvocationID.x == 0) 
+        gl_GlobalInvocationID.y == 0 || gl_GlobalInvocationID.x == 0)
     {
         imageStore(outputImage, ivec2(gl_GlobalInvocationID.xy), color_sci);
         return;

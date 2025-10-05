@@ -15,20 +15,12 @@
 #include "scene/transform.hpp"
 #include "templates/type_pack.hpp"
 namespace emp {
-    struct Device;
+struct Device;
 
-    typedef TypePack<
-        Transform,
-        Constraint,
-        Material,
-        Collider,
-        Rigidbody,
-        Model,
-        ParticleEmitter,
-        Sprite,
-        AnimatedSprite> AllComponentTypes;
+typedef TypePack<Transform, Constraint, Material, Collider, Rigidbody, Model, ParticleEmitter, Sprite, AnimatedSprite>
+    AllComponentTypes;
 
-    void registerSceneTypes(Coordinator& ECS);
-    void registerSceneSystems(Device& device, Coordinator& ECS);
+void registerSceneTypes(Coordinator &ECS);
+void registerSceneSystems(Device &device, Coordinator &ECS);
 };
 #endif

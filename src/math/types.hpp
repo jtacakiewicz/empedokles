@@ -19,5 +19,5 @@
 namespace emp {
 
 vec2f operator*(vec2f a, vec2f b);
-} // namespace emp
+}  //  namespace emp
 #endif

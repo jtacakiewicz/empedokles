@@ -11,14 +11,15 @@ struct Behaviour {
 };
 class BehaviourSystem : public System<Behaviour> {
 public:
-    void update() {
-        for (auto& e : entities) {
-            auto& component = getComponent<Behaviour>(e);
-            if (component.isActive) {
+    void update()
+    {
+        for(auto &e : entities) {
+            auto &component = getComponent<Behaviour>(e);
+            if(component.isActive) {
                 component.on_update(e);
             }
         }
     }
 };
-}; // namespace emp
+};  //  namespace emp
 #endif

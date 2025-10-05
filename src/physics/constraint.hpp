@@ -13,8 +13,8 @@
 namespace emp {
 enum eConstraintType : int {
     Undefined = 0,
-    SwivelPoint, // 2bodies
-    SwivelPointAnchored, // 2bodies
+    SwivelPoint,          //  2bodies
+    SwivelPointAnchored,  //  2bodies
     FixedLock,
     FixedLockAnchored,
 };
@@ -31,17 +31,9 @@ struct PositionalCorrectionInfo {
     float inertia2;
     float mass2;
     float generalized_inverse_mass2;
-    PositionalCorrectionInfo() {
-    }
-    PositionalCorrectionInfo(
-            vec2f normal,
-            Entity e1,
-            vec2f r1,
-            const Rigidbody* rb1,
-            Entity e2,
-            vec2f r2,
-            const Rigidbody* rb2 = nullptr
-    );
+    PositionalCorrectionInfo() { }
+    PositionalCorrectionInfo(vec2f normal, Entity e1, vec2f r1, const Rigidbody *rb1, Entity e2, vec2f r2,
+                             const Rigidbody *rb2 = nullptr);
 };
 struct PositionalCorrResult {
     vec2f pos1_correction = vec2f(0, 0);
@@ -51,13 +43,8 @@ struct PositionalCorrResult {
 
     float delta_lagrange = 0.f;
 };
-PositionalCorrResult calcPositionalCorrection(
-        PositionalCorrectionInfo info,
-        float c,
-        vec2f normal,
-        float delT,
-        float compliance = 0.f
-);
+PositionalCorrResult calcPositionalCorrection(PositionalCorrectionInfo info, float c, vec2f normal, float delT,
+                                              float compliance = 0.f);
 struct Constraint {
     std::vector<Entity> entity_list;
     float compliance = 0.0;
@@ -83,52 +70,52 @@ struct Constraint {
             float rel_rotation1;
             float rel_rotation2;
         } fixed_dynamic;
-    }data;
+    } data;
     struct Builder {
     private:
-        std::pair<Entity, const Transform*> anchor = {-1, nullptr};
-        std::vector<std::pair<Entity, const Transform*>> entity_list;
+        std::pair<Entity, const Transform *> anchor = { -1, nullptr };
+        std::vector<std::pair<Entity, const Transform *>> entity_list;
         float compliance = 0.0;
         float damping = 1.f;
         eConstraintType type = eConstraintType::Undefined;
-        vec2f global_point = {NAN, NAN};
-        vec2f relative_offset = {NAN, NAN};
+        vec2f global_point = { NAN, NAN };
+        vec2f relative_offset = { NAN, NAN };
         float relative_rotation = NAN;
-        vec2f point_rel1 = {NAN, NAN};
-        vec2f point_rel2 = {NAN, NAN};
+        vec2f point_rel1 = { NAN, NAN };
+        vec2f point_rel2 = { NAN, NAN };
 
         bool enabled_collision_between_bodies = false;
+
     public:
-        Builder& addConstrainedEntity(Entity entity, const Transform&);
-        Builder& addAnchorEntity(Entity entity, const Transform&);
+        Builder &addConstrainedEntity(Entity entity, const Transform &);
+        Builder &addAnchorEntity(Entity entity, const Transform &);
 
-        Builder& setCompliance(float compliance);
-        Builder& setDamping(float damping);
+        Builder &setCompliance(float compliance);
+        Builder &setDamping(float damping);
 
-        Builder& enableCollision(bool enable = true);
+        Builder &enableCollision(bool enable = true);
 
-        Builder& setHinge(vec2f point);
-        Builder& setHingeRelative(vec2f point_rel1, vec2f point_rel2);
+        Builder &setHinge(vec2f point);
+        Builder &setHingeRelative(vec2f point_rel1, vec2f point_rel2);
 
-        //if using anchor, relative to anchor otherwise relative to first ConstraintedEntity
-        Builder& setFixed(vec2f relative_offset = vec2f(NAN, NAN), float rel_rotation = NAN);
+        //  if using anchor, relative to anchor otherwise relative to first ConstraintedEntity
+        Builder &setFixed(vec2f relative_offset = vec2f(NAN, NAN), float rel_rotation = NAN);
 
         Constraint build();
     };
 
-    void solve(float delta_time, Coordinator& ECS);
+    void solve(float delta_time, Coordinator &ECS);
 
 private:
-    void m_solvePointSwivelAnchor(float delta_time, Coordinator& ECS);
-    void m_solvePointSwivel(float delta_time, Coordinator& ECS);
-    void m_solvePointFixedAnchor(float delta_time, Coordinator& ECS);
-    void m_solvePointFixed(float delta_time, Coordinator& ECS);
+    void m_solvePointSwivelAnchor(float delta_time, Coordinator &ECS);
+    void m_solvePointSwivel(float delta_time, Coordinator &ECS);
+    void m_solvePointFixedAnchor(float delta_time, Coordinator &ECS);
+    void m_solvePointFixed(float delta_time, Coordinator &ECS);
 };
 struct ConstraintSystem : public System<Constraint> {
-    typedef const std::vector<Entity>* EntityListRef_t;
-    std::vector< EntityListRef_t> getConstrainedGroups() const;
+    typedef const std::vector<Entity> *EntityListRef_t;
+    std::vector<EntityListRef_t> getConstrainedGroups() const;
     void update(float delta_time);
 };
-}; // namespace emp
+};  //  namespace emp
 #endif
-

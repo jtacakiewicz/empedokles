@@ -32,7 +32,7 @@ layout(set = 1, binding = 0) uniform SpriteInfo {
     vec2 rect_min;
     vec2 rect_max;
     vec2 flip; // only 0.f or 1.f
-       
+
 } sprite;
 layout (set = 1, binding = 1) uniform sampler2D diffuseTex;
 

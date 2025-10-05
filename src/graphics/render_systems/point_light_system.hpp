@@ -7,38 +7,34 @@
 #include "graphics/vulkan/device.hpp"
 #include "graphics/vulkan/pipeline.hpp"
 
-// std
+//  std
 #include <memory>
 #include <vector>
 
 namespace emp {
 class PointLightSystem {
 public:
-    PointLightSystem(
-            Device& device,
-            VkRenderPass renderPass,
-            VkDescriptorSetLayout globalSetLayout
-    );
+    PointLightSystem(Device &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout);
 
     ~PointLightSystem();
 
-    PointLightSystem(const PointLightSystem&) = delete;
+    PointLightSystem(const PointLightSystem &) = delete;
 
-    PointLightSystem& operator=(const PointLightSystem&) = delete;
+    PointLightSystem &operator=(const PointLightSystem &) = delete;
 
-    static void update(FrameInfo& frameInfo, GlobalUbo& ubo);
+    static void update(FrameInfo &frameInfo, GlobalUbo &ubo);
 
-    void render(FrameInfo& frameInfo);
+    void render(FrameInfo &frameInfo);
 
 private:
     void createPipelineLayout(VkDescriptorSetLayout globalSetLayout);
 
     void createPipeline(VkRenderPass renderPass);
 
-    Device& device;
+    Device &device;
 
     std::unique_ptr<Pipeline> pipeline;
-    VkPipelineLayout pipelineLayout{};
+    VkPipelineLayout pipelineLayout {};
 };
-} // namespace emp
+}  //  namespace emp
 #endif

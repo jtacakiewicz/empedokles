@@ -10,11 +10,8 @@ class Camera;
 class SpatialVisualizer {
 public:
     bool isOpen = true;
-    void draw(const char* title,
-        Coordinator& ECS,
-        std::function<std::string(Entity)> namingFunc,
-        Camera& camera);
+    void draw(const char *title, Coordinator &ECS, std::function<std::string(Entity)> namingFunc, Camera &camera);
 };
 }
 
-#endif 
+#endif

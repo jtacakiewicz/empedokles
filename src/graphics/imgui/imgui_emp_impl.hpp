@@ -8,15 +8,10 @@
 namespace emp {
 struct Device;
 struct Renderer;
-void ImGuiSetup(
-        ImGui_ImplVulkan_InitInfo init_info,
-        GLFWwindow* window,
-        Device& device,
-        Renderer& rend,
-        VkRenderPass renderPass);
+void ImGuiSetup(ImGui_ImplVulkan_InitInfo init_info, GLFWwindow *window, Device &device, Renderer &rend, VkRenderPass renderPass);
 VkDescriptorPool ImGuiGetDescriptorPool(VkDevice device);
 void ImGuiRenderBegin();
 void ImGuiRenderEnd(VkCommandBuffer commandBuffer);
 void ImGuiDestroy();
 };
-#endif //EMP_IMGUI_IMPL_HPP
+#endif  //  EMP_IMGUI_IMPL_HPP

@@ -3,7 +3,7 @@
 #include <cassert>
 #include <cstdint>
 namespace emp {
-    typedef uint32_t Entity;
-    const Entity MAX_ENTITIES = 4096U;
+typedef uint32_t Entity;
+const Entity MAX_ENTITIES = 4096U;
 };
 #endif

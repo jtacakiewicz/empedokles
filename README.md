@@ -1,6 +1,6 @@
 # Empedokles
 A work-in-progress game engine based on custom ECS, rendered using Vulkan API.
-My dream project of an engine able to run interactive live simulations of fluid, solid and liquid. 
+My dream project of an engine able to run interactive live simulations of fluid, solid and liquid.
 ![basic_scene](https://github.com/Epim3dium/empedokles/blob/39062b4dae5caba00d29362d9f37a9e74a699d27/assets/captures/KnightShowcase.gif)
 ### Editor:
 ![editor](https://github.com/Epim3dium/empedokles/blob/a870e205c718a59be28882cd5341082e882f092d/assets/captures/EditorView.png)
@@ -8,7 +8,7 @@ My dream project of an engine able to run interactive live simulations of fluid,
 ### 🎯 Requirements (Target)
 * Basic animation system either bone or sprite based
 * Interactive simulation of:
-    * Liquid 
+    * Liquid
     * Solid
     * Fluid
     * Rigidbody
@@ -32,8 +32,8 @@ My dream project of an engine able to run interactive live simulations of fluid,
     - added more constraints
         - anchored swivel
         - unanchored swivel
-        - anchored fixed 
-        - unanchored fixed 
+        - anchored fixed
+        - unanchored fixed
     - optimization
         - broad phase
         - idle state

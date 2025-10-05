@@ -7,10 +7,8 @@ struct Ray {
     vec2f pos;
     vec2f dir;
 
-    float length() const {
-        return emp::length(dir);
-    }
-    Ray() {}
+    float length() const { return emp::length(dir); }
+    Ray() { }
     static Ray CreatePoints(vec2f a, vec2f b);
     static Ray CreatePositionDirection(vec2f p, vec2f d);
 };

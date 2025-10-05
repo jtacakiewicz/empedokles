@@ -25,50 +25,41 @@ class App {
 public:
     struct AssetInfo {
         std::string filename;
-        const char* id;
+        const char *id;
     };
 
-    virtual void onUpdate(const float, Window&, KeyboardController&) {
-    }
-    virtual void onFixedUpdate(const float, Window&, KeyboardController&) {
-    }
-    virtual void onRender(Device&, const FrameInfo&) {
-    }
-    virtual void onSetup(Window&, Device&) {
-    }
+    virtual void onUpdate(const float, Window &, KeyboardController &) { }
+    virtual void onFixedUpdate(const float, Window &, KeyboardController &) { }
+    virtual void onRender(Device &, const FrameInfo &) { }
+    virtual void onSetup(Window &, Device &) { }
 
-    App(const int width, const int height,
-        std::vector<AssetInfo> models_to_load,
-        std::vector<AssetInfo> textures_to_load);
+    App(const int width, const int height, std::vector<AssetInfo> models_to_load, std::vector<AssetInfo> textures_to_load);
     virtual ~App();
-    App(const App&) = delete;
-    App& operator=(const App&) = delete;
+    App(const App &) = delete;
+    App &operator=(const App &) = delete;
 
     void run();
-protected:
 
+protected:
     Window window;
     Device device;
 
     GUIManager gui_manager;
     Renderer renderer;
-    // order of declarations matters
-    
+    //  order of declarations matters
+
     KeyboardController controller;
     Coordinator ECS;
 
     void setPhysicsTickrate(const float tick_rate);
-    float getWidth() const {
-        return m_width;
-    }
-    float getHeight() const {
-        return m_height;
-    }
+    float getWidth() const { return m_width; }
+    float getHeight() const { return m_height; }
+
 private:
     float m_width = 800;
     float m_height = 800;
 
-    // synchronization systems
+    //  synchronization systems
     std::condition_variable m_priority_access;
     std::mutex m_coordinator_access_mutex;
     std::atomic<bool> m_isRenderer_waiting = false;
@@ -82,24 +73,14 @@ private:
     std::vector<AssetInfo> m_models_to_load;
     std::vector<AssetInfo> m_textures_to_load;
 
-
     void setupECS();
 
-    void m_updateUBO(float deltaTime,
-        Camera& camera,
-        Buffer& uboBuffer,
-        Buffer& computeUboBuffer);
+    void m_updateUBO(float deltaTime, Camera &camera, Buffer &uboBuffer, Buffer &computeUboBuffer);
     void loadAssets();
 
-    void renderFrame(
-            Camera& camera,
-            RendererContext& render_contex,
-            float delta_time
-    );
-    std::unique_ptr<std::thread> createRenderThread(
-            Camera& camera
-    );
+    void renderFrame(Camera &camera, RendererContext &render_contex, float delta_time);
+    std::unique_ptr<std::thread> createRenderThread(Camera &camera);
     std::unique_ptr<std::thread> createPhysicsThread();
 };
-} // namespace emp
+}  //  namespace emp
 #endif

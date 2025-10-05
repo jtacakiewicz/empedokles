@@ -23,7 +23,7 @@ layout(std140, set = 1, binding = 1) buffer ParticleSSBOOut {
 struct EmitData {
     uint count;
     uint type;
-    
+
     vec2 position;
     float data0;
     float data1;
@@ -135,9 +135,9 @@ void emitParticle(uint index) {
     }
 }
 
-void main() 
+void main()
 {
-    uint index = gl_GlobalInvocationID.x;  
+    uint index = gl_GlobalInvocationID.x;
 
     uint upper_limit = emit.work_end;
     uint lower_limit = emit.work_start;
