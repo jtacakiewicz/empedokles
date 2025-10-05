@@ -34,6 +34,21 @@ else()
     message(STATUS "Using glfw lib at: ${GLFW_LIB}")
 endif()
 
+#OPEN_AL
+if (DEFINED OpenAL_PATH)
+    set(OpenAL_INCLUDE_DIRS "${OpenAL_PATH}/include") # 1.1 Make sure this include path is correct
+    set(OpenAL_LIB "${OpenAL_PATH}/lib") # 1.2 Make sure lib path is correct
+    set(OpenAL_FOUND "True")
+else()
+    find_package(OpenAL REQUIRED)
+    message(STATUS "Found OpenAL: $ENV{OpenAL_PATH}")
+endif()
+if (NOT OpenAL_FOUND)
+    message(FATAL_ERROR "Could not find OpenAL library!")
+else()
+    message(STATUS "Using OpenAL lib at: ${OPENAL_LIB}")
+endif()
+
 # IMGUI
 # FetchContent to download and include ImGui
 include(FetchContent)
@@ -111,8 +126,8 @@ if (WIN32)
   )
 
   target_link_libraries(
-      ${PROJECT_NAME} 
-      glfw3 vulkan-1 imgui implot 
+      ${PROJECT_NAME}
+      glfw3 vulkan-1 imgui implot
   )
 elseif (UNIX)
     message(STATUS "CREATING BUILD FOR UNIX")
@@ -122,7 +137,7 @@ elseif (UNIX)
       ${STB_PATH} ${Vulkan_INCLUDE_DIRS}
     )
     target_link_libraries(
-        ${PROJECT_NAME} glfw ${Vulkan_LIBRARIES} imgui implot 
+        ${PROJECT_NAME} glfw ${Vulkan_LIBRARIES} imgui implot OpenAL::OpenAL
     )
 endif()
 
