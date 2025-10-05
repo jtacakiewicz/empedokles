@@ -163,8 +163,10 @@ set(HEADER_FILES
 include_directories(.)
 include_directories(external/tinyobjloader)
 include_directories(external/stbimage)
+include_directories(external/dr_libs)
 add_library(empedokles SHARED
     ${SOURCE_FILES} ${HEADER_FILES}
 )
+target_include_directories(empedokles PUBLIC external/dr_libs)
 target_compile_options(empedokles PUBLIC -g)
 
