@@ -3,7 +3,7 @@ set(SOURCE_FILES
     debug/log.cpp
 
     compute/compute_manager.cpp
-    
+
     math/types.cpp
     math/math_func.cpp
     math/geometry_func.cpp
@@ -54,6 +54,8 @@ set(SOURCE_FILES
     graphics/sprite_system.cpp
     graphics/particle_system.cpp
 
+    audio/sound_asset.cpp
+
     io/keyboard_controller.cpp
     io/window.cpp
 )
@@ -86,7 +88,7 @@ set(HEADER_FILES
     physics/rigidbody.hpp
     physics/material.hpp
     physics/physics_system.hpp
-    
+
     scene/app.hpp
     scene/register_scene_types.hpp
     scene/hierarchy.hpp
@@ -152,6 +154,8 @@ set(HEADER_FILES
     graphics/utils.hpp
     graphics/particle_system.hpp
     graphics/particle_emit_queue.hpp
+
+    audio/sound_asset.hpp
 
     io/keyboard_controller.hpp
     io/window.hpp
