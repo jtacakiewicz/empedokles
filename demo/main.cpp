@@ -1,3 +1,5 @@
+#include "audio/sound_asset.hpp"
+#include "audio/sound_source.hpp"
 #include "debug/log.hpp"
 #include "graphics/animated_sprite.hpp"
 #include "graphics/particle_system.hpp"

@@ -5,6 +5,7 @@
 #include <AL/alc.h>
 namespace emp {
 
+enum class AudioFileFormat { MP3, WAV, FLAC, NOTSET };
 class SoundAsset {
     void loadMp3(const char *filename);
     void loadFlac(const char *filename);
@@ -20,7 +21,6 @@ public:
     uint16_t num_channels() const { return m_num_channels; }
     uint32_t sample_rate() const { return m_sample_rate; }
 
-    enum class AudioFileFormat { MP3, WAV, FLAC, NOTSET };
     SoundAsset(std::string filename, AudioFileFormat format = AudioFileFormat::NOTSET);
 };
 

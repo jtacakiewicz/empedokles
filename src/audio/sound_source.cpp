@@ -1,6 +1,12 @@
 #include "sound_source.hpp"
 #include <al.h>
 namespace emp {
+AssetRegistry<SoundAsset> SoundSource::m_assets;
+SoundSource SoundSource::create(std::string id, std::string filename, AudioFileFormat format)
+{
+    m_assets.create(id, filename, format);
+    return SoundSource(m_assets.get(id));
+}
 SoundSource::SoundSource(const SoundAsset &sound_asset)
 {
     alGenBuffers(1, &m_buffer);

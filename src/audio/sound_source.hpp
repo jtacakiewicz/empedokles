@@ -1,6 +1,7 @@
 #ifndef EMP_SOUND_SOURCE_HPP
 #define EMP_SOUND_SOURCE_HPP
 #include "audio/sound_asset.hpp"
+#include "core/asset_registry.hpp"
 #include "math/math_defs.hpp"
 #include <al.h>
 namespace emp {
@@ -8,6 +9,8 @@ struct SoundSystem;
 
 class SoundSource {
 private:
+    static AssetRegistry<SoundAsset> m_assets;
+
     ALuint m_source = -1;
     ALuint m_buffer;
 
@@ -16,6 +19,8 @@ private:
 public:
     SoundSource() { }
     SoundSource(const SoundAsset &sound_asset);
+    static SoundSource create(std::string id, std::string filename, AudioFileFormat format = AudioFileFormat::NOTSET);
+
     ~SoundSource();
     void setRolloff(float rolloff);
     void setReferenceDistance(float ref_distance);
