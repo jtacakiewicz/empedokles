@@ -13,10 +13,13 @@
 namespace emp {
 float PhysicsSystem::m_calcRestitution(float coef, float normal_speed, float pre_solve_norm_speed, vec2f gravity, float delT)
 {
-    if(abs(normal_speed) <= gravity.length() * delT) {
-        coef = 0.0;
+    if(pre_solve_norm_speed >= 0.0f) {
+        return 0.0f;
     }
-    return fmin(-normal_speed + (-coef * pre_solve_norm_speed), 0.f);
+
+    float target_v_change = -normal_speed - (coef * pre_solve_norm_speed);
+
+    return fmax(target_v_change, 0.0f);
 }
 float PhysicsSystem::m_calcDynamicFriction(float coef, float tangent_speed, float generalized_inv_mass_sum, float normal_lagrange,
                                            float sub_dt)
