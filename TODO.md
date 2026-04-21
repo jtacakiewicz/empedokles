@@ -3,10 +3,6 @@
 - sound
     - basic sound asset system
     - simple 'play sample'
-    - spatial audio emitters
-- collision
-    - more constraints+
-        - piston
 - graphics
     - debug shapes improved
     - instanced rendering for sprites
@@ -14,11 +10,18 @@
 - core
     - serialization
     - message bus
+- collision
+    - optimize to not be limited by physics system
+    - more constraints+
+        - piston
 - networking?
 
 ---
 
 # 📌 DOING:
+
+- core
+    - correct transform resolution
 
 ---
 
@@ -26,6 +29,7 @@
 - weird error message when closing window
 - when spawing overlapping colliders they explode
 - 'drifting' physics problem
+- semaphore problem `vkQueueSubmit(): pSubmits[0].pSignalSemaphores[0] (VkSemaphore 0x1e000000001e) is being signaled by VkQueue`
 ---
 
 # ✅ DONE:
