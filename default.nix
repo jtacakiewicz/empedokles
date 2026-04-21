@@ -4,7 +4,7 @@ let
     lib-path = with pkgs; lib.makeLibraryPath [
         vulkan-loader
         glfw
-        xorg.libX11.dev
+        libx11.dev
         libGL
         openal
     ];
@@ -29,22 +29,22 @@ mkShell {
         systemd
         libvorbis.dev
         libogg.dev
-        xorg.libX11
-        xorg.libX11.dev
-        xorg.libXext
-        xorg.libXext.dev
-        xorg.libXrandr
-        xorg.libXrandr.dev
-        xorg.libXi
-        xorg.libXi.dev
-        xorg.libXcursor
-        xorg.libXcursor.dev
-        xorg.libXinerama
-        xorg.libXinerama.dev
-        xorg.libXrender
-        xorg.libXrender.dev
-        xorg.libXfixes
-        xorg.libXfixes.dev
+        libx11
+        libx11.dev
+        libxext
+        libxext.dev
+        libxrandr
+        libxrandr.dev
+        libxi
+        libxi.dev
+        libxcursor
+        libxcursor.dev
+        libxinerama
+        libxinerama.dev
+        libxrender
+        libxrender.dev
+        libxfixes
+        libxfixes.dev
         mesa
         libGL
         libGLU
