@@ -39,7 +39,9 @@ class PhysicsSystem : public System<Transform, Collider, Rigidbody, Material> {
                                 float sub_dt);
     vec2f m_calcContactVel(vec2f vel, float ang_vel, vec2f r);
 
-    PenetrationConstraint m_handleCollision(Entity b1, const int convexIdx1, Entity b2, const int convexIdx2, float delT,
+    void m_handleCollision(PenetrationConstraint &constraint, Entity b1, const int convexIdx1, Entity b2, const int convexIdx2,
+                           float delT, float compliance = 0.f);
+    PenetrationConstraint m_detectCollision(Entity b1, const int convexIdx1, Entity b2, const int convexIdx2, float delT,
                                             float compliance = 0.f);
 
     std::vector<CollidingPair> m_broadPhase(const ColliderSystem &collider_system, const TransformSystem &transform_system);

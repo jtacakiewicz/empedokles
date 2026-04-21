@@ -10,6 +10,7 @@
 #include "physics/rigidbody.hpp"
 
 #include "templates/sweep_line.hpp"
+#include "utils/time.hpp"
 namespace emp {
 float PhysicsSystem::m_calcRestitution(float coef, float normal_speed, float pre_solve_norm_speed, vec2f gravity, float delT)
 {
@@ -31,71 +32,35 @@ vec2f PhysicsSystem::m_calcContactVel(vec2f vel, float ang_vel, vec2f r)
 {
     return vel + ang_vel * vec2f(-r.y, r.x);
 }
-PhysicsSystem::PenetrationConstraint PhysicsSystem::m_handleCollision(Entity e1, const int convexIdx1, Entity e2,
+PhysicsSystem::PenetrationConstraint PhysicsSystem::m_detectCollision(Entity e1, const int convexIdx1, Entity e2,
                                                                       const int convexIdx2, float delT, float compliance)
 {
     PenetrationConstraint result;
     result.info.collider_entity = e1;
     result.info.collidee_entity = e2;
 
-    auto &trans1 = getComponent<Transform>(e1);
-    auto &rb1 = getComponent<Rigidbody>(e1);
-    auto &col1 = getComponent<Collider>(e1);
-    auto &mat1 = getComponent<Material>(e1);
+    const auto &trans1 = getComponent<Transform>(e1);
+    const auto &col1 = getComponent<Collider>(e1);
 
-    auto &trans2 = getComponent<Transform>(e2);
-    auto &rb2 = getComponent<Rigidbody>(e2);
-    auto &col2 = getComponent<Collider>(e2);
-    auto &mat2 = getComponent<Material>(e2);
+    const auto &trans2 = getComponent<Transform>(e2);
+    const auto &col2 = getComponent<Collider>(e2);
 
-    vec2f &pos1 = trans1.position;
-    vec2f &pos2 = trans2.position;
-    float &rot1 = trans1.rotation;
-    float &rot2 = trans2.rotation;
-    const float mass1 = rb1.mass();
-    const float mass2 = rb2.mass();
-    const float inertia1 = rb1.inertia();
-    const float inertia2 = rb2.inertia();
-
-    //  should not pass broad phase
-    assert(!(rb1.isStatic && rb2.isStatic));
-    result.isStatic1 = rb1.isStatic;
-    result.isStatic2 = rb2.isStatic;
-
-    const float sfriction = 0.5f * (mat1.static_friction + mat2.static_friction);
-    const float dfriction = 0.5f * (mat1.dynamic_friction + mat2.dynamic_friction);
-    const float restitution = 0.5f * (mat1.restitution + mat2.restitution);
-
-    result.sfriction = sfriction;
-    result.dfriction = dfriction;
-    result.restitution = restitution;
+    const vec2f pos1 = trans1.position;
+    const vec2f pos2 = trans2.position;
+    const float rot1 = trans1.rotation;
+    const float rot2 = trans2.rotation;
 
     auto intersectingShape1 = col1.transformed_shape(trans1)[convexIdx1];
     auto intersectingShape2 = col2.transformed_shape(trans2)[convexIdx2];
     auto intersection = intersectPolygonPolygon(intersectingShape1, intersectingShape2);
     result.detected = intersection.detected;
-    if(!intersection.detected) {
-        return result;
-    }
-    float vn = 0.f;
     auto normal = -intersection.contact_normal;
-
     const auto penetration = intersection.overlap;
     auto p1 = intersection.cp1;
     auto p2 = intersection.cp2;
-    //  TODO fix contact points
-    //   if(d > penetration * 2.f) {
-    //       EMP_LOG_DEBUG << "fixed";
-    //       return {false};
-    //   }
 
     result.info.collision_normal = intersection.contact_normal;
     result.info.penetration = penetration;
-
-    //  result.vel1_pre_solve = b1.vel;
-    //  result.vel2_pre_solve = b2.vel;
-    //  result.ang_vel1_pre_solve = b1.ang_vel;
-    //  result.ang_vel2_pre_solve = b2.ang_vel;
 
     const auto center_to_col_point1 = p1 - pos1;
     const auto center_to_col_point2 = p2 - pos2;
@@ -103,6 +68,49 @@ PhysicsSystem::PenetrationConstraint PhysicsSystem::m_handleCollision(Entity e1,
     const auto radius2 = rotateVec(center_to_col_point2, -rot2);
     result.info.collider_radius = radius1;
     result.info.collidee_radius = radius2;
+
+    return result;
+}
+void PhysicsSystem::m_handleCollision(PhysicsSystem::PenetrationConstraint &constraint, Entity e1, const int convexIdx1,
+                                      Entity e2, const int convexIdx2, float delT, float compliance)
+{
+    assert(constraint.info.detected);
+    auto &trans1 = getComponent<Transform>(e1);
+    auto &rb1 = getComponent<Rigidbody>(e1);
+    auto &mat1 = getComponent<Material>(e1);
+
+    auto &trans2 = getComponent<Transform>(e2);
+    auto &rb2 = getComponent<Rigidbody>(e2);
+    auto &mat2 = getComponent<Material>(e2);
+
+    vec2f &pos1 = trans1.position;
+    vec2f &pos2 = trans2.position;
+    float &rot1 = trans1.rotation;
+    float &rot2 = trans2.rotation;
+
+    const float mass1 = rb1.mass();
+    const float mass2 = rb2.mass();
+    const float inertia1 = rb1.inertia();
+    const float inertia2 = rb2.inertia();
+
+    const float sfriction = 0.5f * (mat1.static_friction + mat2.static_friction);
+    const float dfriction = 0.5f * (mat1.dynamic_friction + mat2.dynamic_friction);
+    const float restitution = 0.5f * (mat1.restitution + mat2.restitution);
+
+    constraint.isStatic1 = rb1.isStatic;
+    constraint.isStatic2 = rb2.isStatic;
+
+    constraint.sfriction = sfriction;
+    constraint.dfriction = dfriction;
+    constraint.restitution = restitution;
+
+    const auto penetration = constraint.info.penetration;
+
+    const auto radius1 = constraint.info.collider_radius;
+    const auto radius2 = constraint.info.collidee_radius;
+    const auto center_to_col_point1 = rotateVec(radius1, rot1);
+    const auto center_to_col_point2 = rotateVec(radius2, rot2);
+    const auto normal = -constraint.info.collision_normal;
 
     auto penetration_correction =
         calcPositionalCorrection(PositionalCorrectionInfo(normal, e1, center_to_col_point1, &rb1, e2, center_to_col_point2, &rb2),
@@ -114,7 +122,7 @@ PhysicsSystem::PenetrationConstraint PhysicsSystem::m_handleCollision(Entity e1,
 
     float delta_lagrange = penetration_correction.delta_lagrange;
 
-    result.info.normal_lagrange = delta_lagrange;
+    constraint.info.normal_lagrange = delta_lagrange;
 
     auto displacementOfPoint = [](vec2f pos, float rot, vec2f radius, Rigidbody &rb) {
         if(rb.isStatic) {
@@ -133,7 +141,7 @@ PhysicsSystem::PenetrationConstraint PhysicsSystem::m_handleCollision(Entity e1,
     if(sliding_len <= 0.f) {
         trans1.syncWithChange();
         trans2.syncWithChange();
-        return result;
+        return;
     }
     auto tangent = delta_p_tangent / sliding_len;
 
@@ -152,7 +160,7 @@ PhysicsSystem::PenetrationConstraint PhysicsSystem::m_handleCollision(Entity e1,
     }
     trans1.syncWithChange();
     trans2.syncWithChange();
-    return result;
+    return;
 }
 bool PhysicsSystem::m_isCollisionAllowed(const CollidingPair &pair, const ColliderSystem &col_sys) const
 {
@@ -252,10 +260,11 @@ PhysicsSystem::m_narrowPhase(ColliderSystem &col_sys, const std::vector<Collidin
         auto e2 = std::get<Entity>(pair.second);
         auto s1i = std::get<size_t>(pair.first);
         auto s2i = std::get<size_t>(pair.second);
-        auto res = m_handleCollision(e1, s1i, e2, s2i, delT);
+        auto res = m_detectCollision(e1, s1i, e2, s2i, delT);
         if(!res.detected) {
             continue;
         }
+        m_handleCollision(res, e1, s1i, e2, s2i, delT);
         col_sys.notifyOfCollision(e1, e2, res.info);
 
         if(!res.isStatic1 && !res.isStatic2) {
@@ -441,6 +450,7 @@ bool PhysicsSystem::m_isDormant(const Rigidbody &rb) const
 void PhysicsSystem::m_step(TransformSystem &trans_sys, ColliderSystem &col_sys, RigidbodySystem &rb_sys,
                            ConstraintSystem &const_sys, float delta_time)
 {
+    Stopwatch stop;
     m_processSleep(delta_time, const_sys);
     rb_sys.integrate(delta_time, DORMANT_TIME_THRESHOLD);
     trans_sys.update();
@@ -456,6 +466,7 @@ void PhysicsSystem::m_step(TransformSystem &trans_sys, ColliderSystem &col_sys, 
 void PhysicsSystem::update(TransformSystem &trans_sys, ColliderSystem &col_sys, RigidbodySystem &rb_sys,
                            ConstraintSystem &const_sys, float delT)
 {
+    Stopwatch stop;
     m_have_collided.reset();
     trans_sys.update();
     m_updateQuadTree();
