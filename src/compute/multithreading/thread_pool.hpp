@@ -1,5 +1,6 @@
 #ifndef EMP_THREAD_POOL_HPP
 #define EMP_THREAD_POOL_HPP
+#include <condition_variable>
 #include <functional>
 #include <queue>
 #include <vector>
@@ -113,9 +114,15 @@ public:
             worker.get()->stop();
         }
     }
+    static ThreadPool &get()
+    {
+        static ThreadPool instance;
+        return instance;
+    }
 
     template <typename TCallback> void addTask(TCallback &&callback) { m_queue.addTask(std::forward<TCallback>(callback)); }
 
+    void ensureEmpty() const { m_queue.waitForCompletion(); }
     void waitForCompletion() const { m_queue.waitForCompletion(); }
 
     template <typename TCallback> void dispatch(uint32_t element_count, TCallback &&callback)
