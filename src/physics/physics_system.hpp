@@ -39,8 +39,7 @@ class PhysicsSystem : public System<Transform, Collider, Rigidbody, Material> {
                                 float sub_dt);
     vec2f m_calcContactVel(vec2f vel, float ang_vel, vec2f r);
 
-    void m_handleCollision(PenetrationConstraint &constraint, Entity b1, const int convexIdx1, Entity b2, const int convexIdx2,
-                           float delT, float compliance = 0.f);
+    void m_handleCollision(PenetrationConstraint &constraint, Entity b1, Entity b2, float delT, float compliance = 0.f);
     PenetrationConstraint m_detectCollision(Entity b1, const int convexIdx1, Entity b2, const int convexIdx2, float delT,
                                             float compliance = 0.f);
 

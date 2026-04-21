@@ -71,8 +71,8 @@ PhysicsSystem::PenetrationConstraint PhysicsSystem::m_detectCollision(Entity e1,
 
     return result;
 }
-void PhysicsSystem::m_handleCollision(PhysicsSystem::PenetrationConstraint &constraint, Entity e1, const int convexIdx1,
-                                      Entity e2, const int convexIdx2, float delT, float compliance)
+void PhysicsSystem::m_handleCollision(PhysicsSystem::PenetrationConstraint &constraint, Entity e1, Entity e2, float delT,
+                                      float compliance)
 {
     assert(constraint.info.detected);
     auto &trans1 = getComponent<Transform>(e1);
@@ -234,37 +234,40 @@ void PhysicsSystem::m_updateQuadTree()
 std::vector<CollidingPair> PhysicsSystem::m_broadPhase(const ColliderSystem &collider_system,
                                                        const TransformSystem &transform_system)
 {
-    //  m_updateQuadTree();
     auto all_pairs = m_quad_tree->findAllIntersections();
     m_filterPotentialCollisions(all_pairs, collider_system);
-    //  std::vector<CollidingPoly> objs;
-    //  for(auto e : entities) {
-    //      const auto& collider = collider_system.getComponent<Collider>(e);
-    //      const auto& transform = transform_system.getComponent<Transform>(e);
-    //      auto shape = collider.transformed_shape(transform);
-    //      for(int i = 0; i < shape.size(); i++) {
-    //          objs.push_back({e, i, AABB::CreateFromVerticies(shape[i])});
-    //      }
-    //  }
-    //  auto all_pairs = sweepBroadPhase<CollidingPoly>(objs.begin(), objs.end(), [](const CollidingPoly& poly)->AABB {
-    //      return std::get<AABB>(poly);
-    //  });
     return all_pairs;
 }
 std::vector<PhysicsSystem::PenetrationConstraint>
 PhysicsSystem::m_narrowPhase(ColliderSystem &col_sys, const std::vector<CollidingPair> &pairs, float delT)
 {
-    std::vector<PenetrationConstraint> result;
-    for(const auto pair : pairs) {
+    std::vector<PenetrationConstraint> result(pairs.size());
+
+    for(size_t i = 0; i < pairs.size(); ++i) {
+        const auto &pair = pairs[i];
+
         auto e1 = std::get<Entity>(pair.first);
         auto e2 = std::get<Entity>(pair.second);
         auto s1i = std::get<size_t>(pair.first);
         auto s2i = std::get<size_t>(pair.second);
         auto res = m_detectCollision(e1, s1i, e2, s2i, delT);
         if(!res.detected) {
+            result[i].detected = false;
             continue;
         }
-        m_handleCollision(res, e1, s1i, e2, s2i, delT);
+        result[i] = res;
+    }
+    for(size_t i = 0; i < pairs.size(); ++i) {
+        auto &res = result[i];
+        if(!res.detected) {
+            continue;
+        }
+
+        const auto &pair = pairs[i];
+        auto e1 = std::get<Entity>(pair.first);
+        auto e2 = std::get<Entity>(pair.second);
+        m_handleCollision(res, e1, e2, delT);
+
         col_sys.notifyOfCollision(e1, e2, res.info);
 
         if(!res.isStatic1 && !res.isStatic2) {
@@ -272,13 +275,15 @@ PhysicsSystem::m_narrowPhase(ColliderSystem &col_sys, const std::vector<Collidin
             m_have_collided.set(e2);
             m_collision_islands.merge(e1, e2);
         }
-        result.push_back(res);
     }
     return result;
 }
 void PhysicsSystem::m_broadcastCollisionMessages(const std::vector<PenetrationConstraint> &constraints)
 {
     for(const auto &constraint : constraints) {
+        if(!constraint.detected) {
+            continue;
+        }
         auto col_info = constraint.info;
         auto &col1 = getComponent<Collider>(col_info.collider_entity);
         auto &col2 = getComponent<Collider>(col_info.collidee_entity);
@@ -295,6 +300,9 @@ void PhysicsSystem::m_broadcastCollisionMessages(const std::vector<PenetrationCo
 void PhysicsSystem::m_solveVelocities(std::vector<PenetrationConstraint> &constraints, float delT)
 {
     for(auto &constraint : constraints) {
+        if(!constraint.detected) {
+            continue;
+        }
         const auto e1 = constraint.info.collider_entity;
         const auto e2 = constraint.info.collidee_entity;
 
@@ -450,7 +458,6 @@ bool PhysicsSystem::m_isDormant(const Rigidbody &rb) const
 void PhysicsSystem::m_step(TransformSystem &trans_sys, ColliderSystem &col_sys, RigidbodySystem &rb_sys,
                            ConstraintSystem &const_sys, float delta_time)
 {
-    Stopwatch stop;
     m_processSleep(delta_time, const_sys);
     rb_sys.integrate(delta_time, DORMANT_TIME_THRESHOLD);
     trans_sys.update();
