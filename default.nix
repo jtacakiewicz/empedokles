@@ -1,70 +1,85 @@
-with import <nixpkgs> {};
+{ pkgs ? import <nixpkgs> { } }:
 
 let
-    lib-path = with pkgs; lib.makeLibraryPath [
-        vulkan-loader
-        glfw
-        libx11.dev
-        libGL
-        openal
-    ];
+  inherit (pkgs) stdenv lib;
+
+  linux-libs = with pkgs; lib.optionals stdenv.isLinux [
+    vulkan-loader
+    libx11
+    libx11.dev
+    libxext
+    libxrandr
+    libxi
+    libxcursor
+    libxinerama
+    libxrender
+    libxfixes
+    mesa
+    systemd
+  ];
+
+  darwin-libs = with pkgs; lib.optionals stdenv.isDarwin (with darwin.apple_sdk.frameworks; [
+    Cocoa
+    CoreVideo
+    IOKit
+    moltenvk
+  ]);
+
+  lib-path = lib.makeLibraryPath (with pkgs; [
+    glfw
+    libGL
+    openal
+  ] ++ linux-libs);
+
 in
-mkShell {
-    name = "vulkan";
-    packages = [
-        pkg-config
-        glfw
-        freetype
-        shaderc             # GLSL to SPIRV compiler - glslc
-        glslang
-        renderdoc           # Graphics debugger
-        tracy               # Graphics profiler
-        valgrind
-        typos
-        pre-commit
-        kdePackages.kcachegrind
-    ];
+pkgs.mkShell {
+  name = "vulkan-env";
 
-    buildInputs = with pkgs; [
-        systemd
-        libvorbis.dev
-        libogg.dev
-        libx11
-        libx11.dev
-        libxext
-        libxext.dev
-        libxrandr
-        libxrandr.dev
-        libxi
-        libxi.dev
-        libxcursor
-        libxcursor.dev
-        libxinerama
-        libxinerama.dev
-        libxrender
-        libxrender.dev
-        libxfixes
-        libxfixes.dev
-        mesa
-        libGL
-        libGLU
-        openal
-        glm
-        glfw
-        csfml
-        freetype
-        vulkan-loader
-        vulkan-headers
-        vulkan-validation-layers
-        vulkan-tools        # vulkaninfo
-        vulkan-tools-lunarg # vkconfig
-        cmake
-    ];
+  packages = with pkgs; [
+    pkg-config
+    glfw
+    freetype
+    shaderc
+    glslang
+    renderdoc
+    tracy
+    valgrind
+    typos
+    pre-commit
+    kdePackages.kcachegrind
+  ];
 
-    VULKAN_SDK = "${vulkan-headers}";
-    VK_LAYER_PATH = "${vulkan-validation-layers}/share/vulkan/explicit_layer.d";
-    shellHook = ''
-        # Prepend or append directories to the PATH
-        export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${lib-path}"
-    '';
+  buildInputs = with pkgs; [
+    libvorbis.dev
+    libogg.dev
+    libGL
+    libGLU
+    openal
+    glm
+    glfw
+    csfml
+    freetype
+    vulkan-headers
+    vulkan-validation-layers
+    vulkan-tools
+    vulkan-tools-lunarg
+    cmake
+    gdb
+  ] ++ linux-libs ++ darwin-libs;
+
+  VULKAN_SDK = "${pkgs.vulkan-headers}";
+  VK_LAYER_PATH = "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
+
+  shellHook = ''
+    echo "--- Vulkan Development Environment (${stdenv.hostPlatform.system}) ---"
+
+    # Platform-specific library path exports
+    ${if stdenv.isLinux then ''
+      export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:${lib-path}"
+    '' else if stdenv.isDarwin then ''
+      export DYLD_LIBRARY_PATH="$DYLD_LIBRARY_PATH:${lib-path}"
+    '' else ""}
+
+    alias vkinfo='vulkaninfo'
+  '';
 }
