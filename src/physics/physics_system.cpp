@@ -74,7 +74,6 @@ PhysicsSystem::PenetrationConstraint PhysicsSystem::m_detectCollision(Entity e1,
 void PhysicsSystem::m_handleCollision(PhysicsSystem::PenetrationConstraint &constraint, Entity e1, Entity e2, float delT,
                                       float compliance)
 {
-    assert(constraint.info.detected);
     auto &trans1 = getComponent<Transform>(e1);
     auto &rb1 = getComponent<Rigidbody>(e1);
     auto &mat1 = getComponent<Material>(e1);
