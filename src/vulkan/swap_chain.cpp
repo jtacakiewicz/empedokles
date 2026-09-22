@@ -40,8 +40,10 @@ void SwapChain::init()
 
 SwapChain::~SwapChain()
 {
-    for(auto imageView : m_swapChain_image_views) {
-        vkDestroyImageView(m_device.device(), imageView, nullptr);
+    const auto img_count = imageCount();
+    for(int i = 0; i < img_count; i++) {
+        vkDestroyImageView(m_device.device(), m_swapChain_image_views[i], nullptr);
+        vkDestroySemaphore(m_device.device(), m_render_finished_semaphores[i], nullptr);
     }
     m_swapChain_image_views.clear();
 
@@ -64,7 +66,6 @@ SwapChain::~SwapChain()
 
     //  cleanup synchronization objects
     for(size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
-        vkDestroySemaphore(m_device.device(), m_render_finished_semaphores[i], nullptr);
         vkDestroySemaphore(m_device.device(), m_image_available_semaphores[i], nullptr);
         vkDestroyFence(m_device.device(), m_in_flight_fences[i], nullptr);
     }
@@ -107,7 +108,8 @@ VkResult SwapChain::submitCommandBuffers(const VkCommandBuffer *buffers, const u
     submitInfo.commandBufferCount = 1;
     submitInfo.pCommandBuffers = buffers;
 
-    VkSemaphore signalSemaphores[] = { m_render_finished_semaphores[m_current_frame] };
+    assert(*imageIndex < m_render_finished_semaphores.size());
+    VkSemaphore signalSemaphores[] = { m_render_finished_semaphores[*imageIndex] };
     submitInfo.signalSemaphoreCount = 1;
     submitInfo.pSignalSemaphores = signalSemaphores;
 
@@ -349,7 +351,7 @@ void SwapChain::createDepthResources()
 void SwapChain::createSyncObjects()
 {
     m_image_available_semaphores.resize(MAX_FRAMES_IN_FLIGHT);
-    m_render_finished_semaphores.resize(MAX_FRAMES_IN_FLIGHT);
+    m_render_finished_semaphores.resize(imageCount(), VK_NULL_HANDLE);
     m_in_flight_fences.resize(MAX_FRAMES_IN_FLIGHT);
     m_images_in_flight.resize(imageCount(), VK_NULL_HANDLE);
 
@@ -362,8 +364,12 @@ void SwapChain::createSyncObjects()
 
     for(size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++) {
         if(vkCreateSemaphore(m_device.device(), &semaphoreInfo, nullptr, &m_image_available_semaphores[i]) != VK_SUCCESS ||
-           vkCreateSemaphore(m_device.device(), &semaphoreInfo, nullptr, &m_render_finished_semaphores[i]) != VK_SUCCESS ||
            vkCreateFence(m_device.device(), &fenceInfo, nullptr, &m_in_flight_fences[i]) != VK_SUCCESS) {
+            throw std::runtime_error("failed to create synchronization objects for a frame!");
+        }
+    }
+    for(size_t i = 0; i < imageCount(); i++) {
+        if(vkCreateSemaphore(m_device.device(), &semaphoreInfo, nullptr, &m_render_finished_semaphores[i]) != VK_SUCCESS) {
             throw std::runtime_error("failed to create synchronization objects for a frame!");
         }
     }
