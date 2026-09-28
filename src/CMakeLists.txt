@@ -25,6 +25,9 @@ set(SOURCE_FILES
     physics/rigidbody.cpp
     physics/physics_system.cpp
 
+    physics/fluid/fluid.cpp
+    physics/fluid/particle.cpp
+
     graphics/imgui/imgui_emp_impl.cpp
     # graphics/systems/point_light_system.cpp
     graphics/render_systems/simple_render_system.cpp
@@ -89,6 +92,9 @@ set(HEADER_FILES
     physics/rigidbody.hpp
     physics/material.hpp
     physics/physics_system.hpp
+
+    physics/fluid/fluid.hpp
+    physics/fluid/particle.hpp
 
     scene/app.hpp
     scene/register_scene_types.hpp
