@@ -140,7 +140,7 @@ public:
 
             config.pipelineLayout = pipeline_layout;
         }
-        compute_pipeline = std::make_unique<Pipeline>(device, "../assets/shaders/falling_sand.comp.spv", config);
+        compute_pipeline = std::make_unique<Pipeline>(device, "assets/shaders/falling_sand.comp.spv", config);
     }
     ComputeDemo(Device &device)
         : m_device(device)

@@ -39,7 +39,7 @@ ModelSystem::ModelSystem(Device &device)
         uboBuffer->map();
     }
 
-    Texture::create("default", device, "../assets/textures/invalid.png");
+    Texture::create("default", device, "assets/textures/invalid.png");
 }
 
 void ModelSystem::updateBuffer(int frameIndex)

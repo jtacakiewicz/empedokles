@@ -110,7 +110,7 @@ void ParticleRenderSystem::m_createPipeline(Device &device, VkRenderPass render_
         vkCreatePipelineLayout(device.device(), &pipelineLayoutInfo, nullptr, &compute_pipeline_layout);
 
         config.pipelineLayout = compute_pipeline_layout;
-        compute_pipeline = std::make_unique<Pipeline>(device, "../assets/shaders/particle_update.comp.spv", config);
+        compute_pipeline = std::make_unique<Pipeline>(device, "assets/shaders/particle_update.comp.spv", config);
     }
     {
         PipelineConfigInfo config;
@@ -127,8 +127,8 @@ void ParticleRenderSystem::m_createPipeline(Device &device, VkRenderPass render_
         vkCreatePipelineLayout(device.device(), &pipelineLayoutInfo, nullptr, &graphics_pipeline_layout);
 
         config.pipelineLayout = graphics_pipeline_layout;
-        graphics_pipeline = std::make_unique<Pipeline>(device, "../assets/shaders/particle_draw.vert.spv",
-                                                       "../assets/shaders/particle_draw.frag.spv", config);
+        graphics_pipeline = std::make_unique<Pipeline>(device, "assets/shaders/particle_draw.vert.spv",
+                                                       "assets/shaders/particle_draw.frag.spv", config);
     }
 }
 void ParticleRenderSystem::compute(const FrameInfo &frame_info, EmitQueue &emit_queue)

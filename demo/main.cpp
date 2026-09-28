@@ -63,19 +63,19 @@ public:
     Demo(int w = 1440, int h = 810)
         : App(w, h,
               {
-                  { "../assets/models/colored_cube.obj", "cube" }
+                  { "assets/models/colored_cube.obj", "cube" }
     },
               {
-                  { "../assets/textures/dummy.png", "dummy" },
-                  { "../assets/textures/crate.jpg", "crate" },
-                  { "../assets/textures/background.jpg", "background" },
-                  { "../assets/textures/knight/_Run.png", "running" },
-                  { "../assets/textures/knight/_Jump.png", "jump-up" },
-                  { "../assets/textures/knight/_Fall.png", "jump-down" },
-                  { "../assets/textures/knight/_Idle.png", "idle" },
-                  { "../assets/textures/knight/_AttackNoMovement.png", "attack" },
-                  { "../assets/textures/knight/_Roll.png", "roll" },
-                  { "../assets/textures/knight/_JumpFallInbetween.png", "jumpfall" },
+                  { "assets/textures/dummy.png", "dummy" },
+                  { "assets/textures/crate.jpg", "crate" },
+                  { "assets/textures/background.jpg", "background" },
+                  { "assets/textures/knight/_Run.png", "running" },
+                  { "assets/textures/knight/_Jump.png", "jump-up" },
+                  { "assets/textures/knight/_Fall.png", "jump-down" },
+                  { "assets/textures/knight/_Idle.png", "idle" },
+                  { "assets/textures/knight/_AttackNoMovement.png", "attack" },
+                  { "assets/textures/knight/_Roll.png", "roll" },
+                  { "assets/textures/knight/_JumpFallInbetween.png", "jumpfall" },
               })
     {
     }

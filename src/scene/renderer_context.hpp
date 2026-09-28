@@ -60,11 +60,11 @@ struct RendererContext {
             Pipeline::enableAlphaBlending(debug_shape_pipeline_config);
             model_rend_sys = std::make_unique<SimpleRenderSystem>(
                 device, renderer.getSwapChainRenderPass(), global_set_layout->getDescriptorSetLayout(),
-                "../assets/shaders/debug_shape.vert.spv", "../assets/shaders/debug_shape.frag.spv", &debug_shape_pipeline_config);
+                "assets/shaders/debug_shape.vert.spv", "assets/shaders/debug_shape.frag.spv", &debug_shape_pipeline_config);
         }
         sprite_rend_sys = std::make_unique<SimpleRenderSystem>(
             device, renderer.getSwapChainRenderPass(), global_set_layout->getDescriptorSetLayout(),
-            "../assets/shaders/sprite.vert.spv", "../assets/shaders/sprite.frag.spv");
+            "assets/shaders/sprite.vert.spv", "assets/shaders/sprite.frag.spv");
         particle_rend_sys = std::make_unique<ParticleRenderSystem>(
             device, renderer.getSwapChainRenderPass(), compute_set_layout->getDescriptorSetLayout(),
             global_set_layout->getDescriptorSetLayout(), renderer.getAspectRatio());
