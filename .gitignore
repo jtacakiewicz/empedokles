@@ -5,5 +5,5 @@ out
 .vs
 .vscode
 imgui.ini
-tmux-session.sh
 *.spv
+*.log
