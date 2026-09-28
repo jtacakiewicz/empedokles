@@ -8,7 +8,7 @@ template <typename... Components> class System : public SystemOf<Components...> 
     friend Coordinator;
     void setECS(Coordinator *coord) { this->coordinator = coord; }
 
-public:
+protected:
     template <class T> inline T &getComponent(Entity entity)
     {
         static_assert((std::is_same<T, Components>::value || ...), "must get component contained in this system");
