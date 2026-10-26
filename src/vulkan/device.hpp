@@ -2,6 +2,7 @@
 #define EMP_DEVICE_HPP
 
 #include <vulkan/vulkan_core.h>
+#include <vulkan/vulkan_beta.h>
 #include "graphics/imgui/imgui_emp_impl.hpp"
 #include "io/window.hpp"
 
@@ -162,9 +163,10 @@ private:
     VkQueue m_present_queue {};
 
     const std::vector<const char *> validation_layers = { "VK_LAYER_KHRONOS_validation" };
-    const std::vector<const char *> device_extensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+    const std::vector<const char *> device_extensions = { 
+        VK_KHR_SWAPCHAIN_EXTENSION_NAME,
 #ifdef __APPLE__
-                                                          VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME
+        VK_KHR_PORTABILITY_SUBSET_EXTENSION_NAME,
 #endif
     };
 };
