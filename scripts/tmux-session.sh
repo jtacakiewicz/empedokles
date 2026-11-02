@@ -3,11 +3,11 @@
 SESSION_NAME="emp-dev"
 
 # Start a new tmux session with the first window running nvim
-tmux new-session -d -s $SESSION_NAME -n nvim "nix-shell . --run nvim"
+tmux new-session -d -s $SESSION_NAME -n nvim "nix develop . -c nvim"
 
 
 # Create second window (idle)
-tmux new-window -t $SESSION_NAME:2 -n build "nix-shell . --run zsh"
+tmux new-window -t $SESSION_NAME:2 -n build "nix develop . -c zsh"
 
 # Create third window running lazygit
 tmux new-window -t $SESSION_NAME:3 -n lazygit 'lazygit'

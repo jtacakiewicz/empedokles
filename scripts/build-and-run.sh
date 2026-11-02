@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
+
 set -euo pipefail
-mkdir -p build
-cd build
-cmake -S ../ -B . -D CMAKE_BUILD_TYPE="${1:-Debug}" -G Ninja -DCMAKE_MAKE_PROGRAM=$(which ninja)
-cmake --build . -j
-./tests/tests
 
-cd ..
+BUILD_DIR="build"
+BUILD_TYPE="${1:-Debug}"
 
+mkdir -p "${BUILD_DIR}"
+
+cmake \
+    -S . \
+    -B "${BUILD_DIR}" \
+    -D CMAKE_BUILD_TYPE="${BUILD_TYPE}"
+
+cmake --build "${BUILD_DIR}" -j
+
+ctest \
+    --test-dir "${BUILD_DIR}/tests" \
+    --output-on-failure
