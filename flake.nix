@@ -22,7 +22,6 @@
           libxinerama
           libxrender
           libxfixes
-          mesa
           systemd
           vulkan-tools-lunarg
           renderdoc
@@ -81,7 +80,6 @@
 
           VULKAN_SDK = "${pkgs.vulkan-headers}";
           VK_LAYER_PATH = "${pkgs.vulkan-validation-layers}/share/vulkan/explicit_layer.d";
-          VK_ICD_FILENAMES = lib.optionalString stdenv.hostPlatform.isDarwin "${pkgs.moltenvk}/share/vulkan/icd.d/MoltenVK_icd.json";
           OpenAL_PATH = "${pkgs.openal}";
 
           shellHook = ''
