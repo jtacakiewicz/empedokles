@@ -74,9 +74,9 @@ vec2f normal(vec2f v)
 {
     return v / length(v);
 }
-vec2f proj(vec2f a, vec2f plane_norm)
+float proj(vec2f a, vec2f plane_norm)
 {
-    return (dot(a, plane_norm) / dot(plane_norm, plane_norm)) * plane_norm;
+    return (dot(a, plane_norm) / dot(plane_norm, plane_norm));
 }
 float perp_dot(vec2f a, vec2f b)
 {

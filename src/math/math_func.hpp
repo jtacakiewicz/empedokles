@@ -16,7 +16,7 @@ float length(vec2f v);
 float qlen(vec2f);
 vec2f normal(vec2f v);
 float dot(vec2f a, vec2f b);
-vec2f proj(vec2f a, vec2f plane_norm);
+float proj(vec2f a, vec2f plane_norm);
 float perp_dot(vec2f a, vec2f b);
 
 float angleAround(vec2f a, vec2f pivot, vec2f b);

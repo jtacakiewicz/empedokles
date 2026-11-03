@@ -18,8 +18,8 @@ TEST(MathTest, BasicUtilFunctions)
     ASSERT_EQ(dot(vec2f(2, 0), vec2f(2, 0)), 4.f);
     ASSERT_EQ(dot(vec2f(0, 2), vec2f(2, 0)), 0.f);
 
-    ASSERT_EQ(proj(vec2f(2, 0), vec2f(0, 1)), vec2f(0.f, 0.f));
-    ASSERT_EQ(proj(vec2f(2, 2), normal(vec2f(1, 1))), vec2f(2, 2));
+    ASSERT_EQ(proj(vec2f(2, 0), vec2f(0, 1)), 0.f);
+    EXPECT_NEAR(proj(vec2f(2, 2), normal(vec2f(1, 1))), sqrt(2.f) * 2.f, 0.0001f);
 
     ASSERT_EQ(perp_dot(vec2f(1, 0), vec2f(1, 0)), 0.f);
     ASSERT_EQ(perp_dot(vec2f(0, -1), vec2f(1, 0)), 1.f);
