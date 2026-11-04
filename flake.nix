@@ -59,6 +59,7 @@
             tracy
             typos
             pre-commit
+            tree-sitter
           ];
 
           buildInputs = with pkgs; [
