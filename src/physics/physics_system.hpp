@@ -3,6 +3,7 @@
 #include "core/coordinator.hpp"
 #include "core/entity.hpp"
 #include "debug/debug.hpp"
+#include "debug/log.hpp"
 #include "graphics/utils.hpp"
 #include "math/geometry_func.hpp"
 #include "math/math_func.hpp"
@@ -47,7 +48,6 @@ class PhysicsSystem : public System<Transform, Collider, Rigidbody, Material> {
 
     bool m_isCollisionAllowed(const CollidingPair &, const ColliderSystem &col_sys) const;
     void m_filterPotentialCollisions(std::vector<CollidingPair> &, const ColliderSystem &col_sys);
-    void m_updateQuadTree();
 
     std::vector<PenetrationConstraint> m_narrowPhase(ColliderSystem &col_sys, const std::vector<CollidingPair> &pairs,
                                                      float delT);
@@ -64,10 +64,6 @@ class PhysicsSystem : public System<Transform, Collider, Rigidbody, Material> {
     void m_separateNonColliding();
     void m_step(TransformSystem &trans_sys, ColliderSystem &col_sys, RigidbodySystem &rb_sys, ConstraintSystem &const_sys,
                 float deltaTime);
-
-    typedef QuadTree<std::tuple<Entity, size_t, AABB>, AABBextracter &> QuadTree_t;
-    std::unique_ptr<QuadTree_t> m_quad_tree;
-    AABBextracter m_aabb_extracter;
 
     DisjointSet<MAX_ENTITIES> m_collision_islands;
     std::bitset<MAX_ENTITIES> m_have_collided;

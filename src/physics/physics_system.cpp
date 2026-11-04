@@ -195,29 +195,10 @@ void PhysicsSystem::m_filterPotentialCollisions(std::vector<CollidingPair> &pair
         }
     }
 }
-void PhysicsSystem::m_updateQuadTree()
+std::vector<CollidingPair> PhysicsSystem::m_broadPhase(const ColliderSystem &collider_system,
+                                                       const TransformSystem &transform_system)
 {
-    AABB current_minimal = AABB::Expandable();
-    for(auto e : entities) {
-        const auto &col = getComponent<Collider>(e);
-        const auto &trans = getComponent<Transform>(e);
-
-        auto aabb = col.extent();
-        aabb = AABB::TransformedAABB(trans.global(), aabb);
-
-        current_minimal.expandToContain(aabb.min);
-        current_minimal.expandToContain(aabb.max);
-    }
-    if(m_quad_tree == nullptr || !AABBcontainsAABB(m_quad_tree->getAABB(), current_minimal)) {
-        if(m_quad_tree) {
-            EMP_LOG(DEBUG2) << "quad tree rebuilt, size: " << m_quad_tree->getAABB().size().x << "\t"
-                            << m_quad_tree->getAABB().size().y;
-        }
-        m_quad_tree.reset();
-        current_minimal.setSize(current_minimal.size() * 2.f);
-        m_quad_tree = std::unique_ptr<QuadTree_t>(new QuadTree_t(current_minimal, m_aabb_extracter));
-    }
-    m_quad_tree->clear();
+    std::vector<CollidingPoly> all_objects;
     for(auto e : entities) {
         const auto &col = getComponent<Collider>(e);
         const auto &trans = getComponent<Transform>(e);
@@ -225,15 +206,10 @@ void PhysicsSystem::m_updateQuadTree()
         for(int i = 0; i < shape.size(); i++) {
             auto aabb = AABB::CreateFromVerticies(shape[i]);
             aabb.setSize(aabb.size() * 1.5f);
-            m_quad_tree->add({ e, i, aabb });
+            all_objects.push_back({ e, i, aabb });
         }
     }
-    m_quad_tree->updateLeafes();
-}
-std::vector<CollidingPair> PhysicsSystem::m_broadPhase(const ColliderSystem &collider_system,
-                                                       const TransformSystem &transform_system)
-{
-    auto all_pairs = m_quad_tree->findAllIntersections();
+    auto all_pairs = sweepLine<CollidingPoly>(all_objects.begin(), all_objects.end(), [](auto t) { return std::get<AABB>(t); });
     m_filterPotentialCollisions(all_pairs, collider_system);
     return all_pairs;
 }
@@ -475,7 +451,6 @@ void PhysicsSystem::update(TransformSystem &trans_sys, ColliderSystem &col_sys, 
     Stopwatch stop;
     m_have_collided.reset();
     trans_sys.update();
-    m_updateQuadTree();
     m_applyGravity(delT);
     m_applyAirDrag(delT);
     for(int i = 0; i < substep_count; i++) {
