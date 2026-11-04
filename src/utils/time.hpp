@@ -14,6 +14,7 @@ class Stopwatch {
 
 public:
     Stopwatch() { m_start = std::chrono::high_resolution_clock::now(); }
+    void start() { m_start = std::chrono::high_resolution_clock::now(); }
     double getElapsedTime()
     {
         m_stop = std::chrono::high_resolution_clock::now();
