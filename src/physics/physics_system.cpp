@@ -8,6 +8,7 @@
 #include "physics/collider.hpp"
 #include "physics/constraint.hpp"
 #include "physics/rigidbody.hpp"
+#include "utils/benchmark.hpp"
 
 #include "templates/sweep_line.hpp"
 #include "utils/time.hpp"
@@ -35,6 +36,7 @@ vec2f PhysicsSystem::m_calcContactVel(vec2f vel, float ang_vel, vec2f r)
 PhysicsSystem::PenetrationConstraint PhysicsSystem::m_detectCollision(Entity e1, const int convexIdx1, Entity e2,
                                                                       const int convexIdx2, float delT, float compliance)
 {
+    EMP_BENCHMARK_FUNC();
     PenetrationConstraint result;
     result.info.collider_entity = e1;
     result.info.collidee_entity = e2;
@@ -74,6 +76,7 @@ PhysicsSystem::PenetrationConstraint PhysicsSystem::m_detectCollision(Entity e1,
 void PhysicsSystem::m_handleCollision(PhysicsSystem::PenetrationConstraint &constraint, Entity e1, Entity e2, float delT,
                                       float compliance)
 {
+    EMP_BENCHMARK_FUNC();
     auto &trans1 = getComponent<Transform>(e1);
     auto &rb1 = getComponent<Rigidbody>(e1);
     auto &mat1 = getComponent<Material>(e1);
@@ -163,6 +166,7 @@ void PhysicsSystem::m_handleCollision(PhysicsSystem::PenetrationConstraint &cons
 }
 bool PhysicsSystem::m_isCollisionAllowed(const CollidingPair &pair, const ColliderSystem &col_sys) const
 {
+    EMP_BENCHMARK_FUNC();
     auto e1 = std::get<Entity>(pair.first);
     auto e2 = std::get<Entity>(pair.second);
     auto s1i = std::get<size_t>(pair.first);
@@ -187,6 +191,7 @@ bool PhysicsSystem::m_isCollisionAllowed(const CollidingPair &pair, const Collid
 }
 void PhysicsSystem::m_filterPotentialCollisions(std::vector<CollidingPair> &pairs, const ColliderSystem &col_sys)
 {
+    EMP_BENCHMARK_FUNC();
     for(int i = 0; i < pairs.size(); i++) {
         if(!m_isCollisionAllowed(pairs[i], col_sys)) {
             pairs.erase(pairs.begin() + i);
@@ -198,6 +203,7 @@ void PhysicsSystem::m_filterPotentialCollisions(std::vector<CollidingPair> &pair
 std::vector<CollidingPair> PhysicsSystem::m_broadPhase(const ColliderSystem &collider_system,
                                                        const TransformSystem &transform_system)
 {
+    EMP_BENCHMARK_FUNC();
     std::vector<CollidingPoly> all_objects;
     for(auto e : entities) {
         const auto &col = getComponent<Collider>(e);
@@ -216,6 +222,7 @@ std::vector<CollidingPair> PhysicsSystem::m_broadPhase(const ColliderSystem &col
 std::vector<PhysicsSystem::PenetrationConstraint>
 PhysicsSystem::m_narrowPhase(ColliderSystem &col_sys, const std::vector<CollidingPair> &pairs, float delT)
 {
+    EMP_BENCHMARK_FUNC();
     std::vector<PenetrationConstraint> result(pairs.size());
 
     for(size_t i = 0; i < pairs.size(); ++i) {
@@ -255,6 +262,7 @@ PhysicsSystem::m_narrowPhase(ColliderSystem &col_sys, const std::vector<Collidin
 }
 void PhysicsSystem::m_broadcastCollisionMessages(const std::vector<PenetrationConstraint> &constraints)
 {
+    EMP_BENCHMARK_FUNC();
     for(const auto &constraint : constraints) {
         if(!constraint.detected) {
             continue;
@@ -274,6 +282,7 @@ void PhysicsSystem::m_broadcastCollisionMessages(const std::vector<PenetrationCo
 //  need to update colliders after
 void PhysicsSystem::m_solveVelocities(std::vector<PenetrationConstraint> &constraints, float delT)
 {
+    EMP_BENCHMARK_FUNC();
     for(auto &constraint : constraints) {
         if(!constraint.detected) {
             continue;
@@ -342,6 +351,7 @@ void PhysicsSystem::m_solveVelocities(std::vector<PenetrationConstraint> &constr
 }
 void PhysicsSystem::m_applyGravity(float delta_time)
 {
+    EMP_BENCHMARK_FUNC();
     for(const auto e : entities) {
         auto &rb = getComponent<Rigidbody>(e);
         if(m_isDormant(rb)) {
@@ -354,6 +364,7 @@ void PhysicsSystem::m_applyGravity(float delta_time)
 }
 void PhysicsSystem::m_applyAirDrag(float delta_time)
 {
+    EMP_BENCHMARK_FUNC();
     for(const auto e : entities) {
         auto &rb = getComponent<Rigidbody>(e);
         if(m_isDormant(rb)) {
@@ -372,6 +383,7 @@ void PhysicsSystem::m_applyAirDrag(float delta_time)
 }
 void PhysicsSystem::m_processSleepingGroups(float delta_time)
 {
+    EMP_BENCHMARK_FUNC();
     for(const auto e : entities) {
         auto &rb = getComponent<Rigidbody>(e);
         if(rb.isStatic) {
@@ -405,6 +417,7 @@ void PhysicsSystem::m_processSleepingGroups(float delta_time)
 }
 void PhysicsSystem::m_mergeConstrainedSleepingGroups(ConstraintSystem &constr_sys)
 {
+    EMP_BENCHMARK_FUNC();
     auto all_groups = constr_sys.getConstrainedGroups();
     for(const auto &group : all_groups) {
         auto prev = group->back();
@@ -415,6 +428,7 @@ void PhysicsSystem::m_mergeConstrainedSleepingGroups(ConstraintSystem &constr_sy
 }
 void PhysicsSystem::m_processSleep(float delta_time, ConstraintSystem &constr_sys)
 {
+    EMP_BENCHMARK_FUNC();
     m_mergeConstrainedSleepingGroups(constr_sys);
     m_processSleepingGroups(delta_time);
     for(const auto e : entities) {
@@ -428,11 +442,13 @@ void PhysicsSystem::m_processSleep(float delta_time, ConstraintSystem &constr_sy
 }
 bool PhysicsSystem::m_isDormant(const Rigidbody &rb) const
 {
+    EMP_BENCHMARK_FUNC();
     return useDeactivation && rb.time_resting > DORMANT_TIME_THRESHOLD;
 }
 void PhysicsSystem::m_step(TransformSystem &trans_sys, ColliderSystem &col_sys, RigidbodySystem &rb_sys,
                            ConstraintSystem &const_sys, float delta_time)
 {
+    EMP_BENCHMARK_FUNC();
     m_processSleep(delta_time, const_sys);
     rb_sys.integrate(delta_time, DORMANT_TIME_THRESHOLD);
     trans_sys.update();
@@ -448,6 +464,7 @@ void PhysicsSystem::m_step(TransformSystem &trans_sys, ColliderSystem &col_sys, 
 void PhysicsSystem::update(TransformSystem &trans_sys, ColliderSystem &col_sys, RigidbodySystem &rb_sys,
                            ConstraintSystem &const_sys, float delT)
 {
+    EMP_BENCHMARK_FUNC();
     Stopwatch stop;
     m_have_collided.reset();
     trans_sys.update();
@@ -466,6 +483,7 @@ void PhysicsSystem::update(TransformSystem &trans_sys, ColliderSystem &col_sys, 
 }
 void PhysicsSystem::m_separateNonColliding()
 {
+    EMP_BENCHMARK_FUNC();
     for(auto e : entities) {
         auto &rb = getComponent<Rigidbody>(e);
         if(!m_have_collided.test(e) && !m_isDormant(rb)) {
