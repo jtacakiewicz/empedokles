@@ -73,6 +73,18 @@ public:
 #define FILELOG_MAX_LEVEL DEBUG2
 #endif
 
+#define EMP__HELPER_LOG_ONCE(level, uniqueflag)   \
+    static int uniqueflag = 1;                    \
+    if(level > FILELOG_MAX_LEVEL)                 \
+        ;                                         \
+    else if(level > Log::s_reporting_level)       \
+        ;                                         \
+    else if(uniqueflag != 0 && uniqueflag-- == 1) \
+    Log().Get(level)
+
+#define EMP_LOG_ONCE(level) \
+    EMP__HELPER_LOG_ONCE(level, EMP__HELPER_MAKE_UNIQUE_VARIABLE_NAME(once_flag_name_that_you_will_never_use))
+
 #define EMP_LOG(level)                      \
     if(level > FILELOG_MAX_LEVEL)           \
         ;                                   \
@@ -120,10 +132,10 @@ public:
     EMP__HELPER_LOG_INTERVAL(level, time, EMP__HELPER_MAKE_UNIQUE_VARIABLE_NAME(time_point_name_that_you_will_never_use), \
                              EMP__HELPER_MAKE_UNIQUE_VARIABLE_NAME(canlog_name_that_you_will_never_use))
 
-//#define L_(level) \
-//if (level > FILELOG_MAX_LEVEL) ;\
-//else if (level > FILELog::s_reporting_level || !Output2FILE::Stream()) ; \
-//else FILELog().Get(level)
+//  #define L_(level) \
+//  if (level > FILELOG_MAX_LEVEL) ;\
+//  else if (level > FILELog::s_reporting_level || !Output2FILE::Stream()) ; \
+//  else FILELog().Get(level)
 
 }  //  namespace emp
 #endif  //  emp_LOG_H
