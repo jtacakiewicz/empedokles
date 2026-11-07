@@ -14,14 +14,17 @@ class SoundAsset {
     ALenum m_format;
     uint16_t m_num_channels;
     uint32_t m_sample_rate;
+    ALuint m_buffer;
 
 public:
     const std::vector<int16_t> &pcmBuffer() const { return m_pcm_buffer; }
+    const ALuint alBuffer() const { return m_buffer; }
     ALenum format() const { return m_format; }
     uint16_t num_channels() const { return m_num_channels; }
     uint32_t sample_rate() const { return m_sample_rate; }
 
     SoundAsset(std::string filename, AudioFileFormat format = AudioFileFormat::NOTSET);
+    ~SoundAsset();
 };
 
 };

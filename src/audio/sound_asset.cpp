@@ -97,6 +97,12 @@ SoundAsset::SoundAsset(std::string filename, AudioFileFormat format)
         default:
             break;
     }
+    alGenBuffers(1, &m_buffer);
+    alBufferData(m_buffer, m_format, pcmBuffer().data(), static_cast<ALsizei>(pcmBuffer().size() * sizeof(int16_t)),
+                 static_cast<ALsizei>(sample_rate()));
 }
-
+SoundAsset::~SoundAsset()
+{
+    alDeleteBuffers(1, &m_buffer);
+}
 };

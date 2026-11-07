@@ -7,30 +7,29 @@
 namespace emp {
 struct SoundSystem;
 
+#define EMP_MAX_SOUND_SOURCES 1024U
 class SoundSource {
 private:
     static AssetRegistry<SoundAsset> m_assets;
 
-    ALuint m_source = -1;
-    ALuint m_buffer;
-
     void setPosition(vec3f pos);
+
+    ALint m_source;
 
 public:
     SoundSource() { }
-    SoundSource(const SoundAsset &sound_asset);
-    static SoundSource create(std::string id, std::string filename, AudioFileFormat format = AudioFileFormat::NOTSET);
+    SoundSource(std::string name);
+    static void create(std::string id, std::string filename, AudioFileFormat format = AudioFileFormat::NOTSET);
 
     ~SoundSource();
     void setRolloff(float rolloff);
     void setReferenceDistance(float ref_distance);
     void setMaxDistance(float max_distance);
     void play();
-    ALuint id() const { return m_source; }
     ALint state() const
     {
         ALint state;
-        alGetSourcei(id(), AL_SOURCE_STATE, &state);
+        alGetSourcei(source(), AL_SOURCE_STATE, &state);
         return state;
     }
     bool isPlaying() const { return state() == AL_PLAYING; }
