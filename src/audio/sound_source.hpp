@@ -21,7 +21,6 @@ public:
     SoundSource(std::string name);
     static void create(std::string id, std::string filename, AudioFileFormat format = AudioFileFormat::NOTSET);
 
-    ~SoundSource();
     void setRolloff(float rolloff);
     void setReferenceDistance(float ref_distance);
     void setMaxDistance(float max_distance);
@@ -29,7 +28,7 @@ public:
     ALint state() const
     {
         ALint state;
-        alGetSourcei(source(), AL_SOURCE_STATE, &state);
+        alGetSourcei(m_source, AL_SOURCE_STATE, &state);
         return state;
     }
     bool isPlaying() const { return state() == AL_PLAYING; }

@@ -2,8 +2,6 @@
 #include <al.h>
 namespace emp {
 AssetRegistry<SoundAsset> SoundSource::m_assets;
-ALuint SoundSource::handles[EMP_MAX_SOUND_SOURCES] { 0 };
-size_t SoundSource::next_free_handle = 0U;
 
 void checkError()
 {
@@ -21,15 +19,6 @@ SoundSource::SoundSource(std::string name)
     auto &sound_asset = m_assets.get(name);
 
     alSourcei(m_source, AL_BUFFER, sound_asset.alBuffer());
-}
-void SoundSource::init()
-{
-    alGenSources(EMP_MAX_SOUND_SOURCES, handles);
-    next_free_handle = 0;
-}
-void SoundSource::deinit()
-{
-    alDeleteSources(EMP_MAX_SOUND_SOURCES, handles);
 }
 
 void SoundSource::setRolloff(float rolloff)

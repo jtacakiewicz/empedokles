@@ -1,9 +1,11 @@
 #include "audio/sound_asset.hpp"
 #include "audio/sound_source.hpp"
+#include "audio/sound_system.hpp"
 #include "debug/log.hpp"
 #include "graphics/animated_sprite.hpp"
 #include "graphics/particle_system.hpp"
 #include "gui/gui_manager.hpp"
+#include "utils/benchmark.hpp"
 #include "io/keyboard_controller.hpp"
 #include "physics/collider.hpp"
 #include "physics/rigidbody.hpp"
@@ -78,6 +80,9 @@ public:
                   { "assets/textures/knight/_JumpFallInbetween.png", "jumpfall" },
               })
     {
+    }
+    ~Demo() {
+        BenchmarkRegistry::get().print();
     }
 };
 void Demo::onSetup(Window &window, Device &device)
@@ -160,6 +165,11 @@ void Demo::onSetup(Window &window, Device &device)
     ECS.getSystem<PhysicsSystem>()->gravity = { 0, 20000.f };
     ECS.getSystem<PhysicsSystem>()->substep_count = 16U;
     this->setPhysicsTickrate(120.f);
+    auto soundSystem = ECS.getSystem<SoundSystem>();
+    SoundSource::create("sample", "assets/audio/fish.wav", AudioFileFormat::WAV);
+    ECS.addComponent(protagonist.id, SoundSource("sample"));
+    ECS.getComponent<SoundSource>(protagonist.id)->setRolloff(100.f);
+    ECS.getComponent<SoundSource>(protagonist.id)->play();
 }
 void Demo::onFixedUpdate(const float delta_time, Window &window, KeyboardController &controller) { }
 

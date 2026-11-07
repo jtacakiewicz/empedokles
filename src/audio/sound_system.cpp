@@ -24,6 +24,5 @@ SoundSystem::SoundSystem()
             EMP_LOG(ERROR) << "failed to initialize sound system";
         }
     }
-    SoundSource::init();
 }
 };
