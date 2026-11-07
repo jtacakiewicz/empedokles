@@ -55,6 +55,7 @@ set(SOURCE_FILES
     graphics/particle_system.cpp
 
     audio/sound_asset.cpp
+    audio/sound_system.cpp
     audio/sound_source.cpp
 
     io/keyboard_controller.cpp
@@ -157,6 +158,7 @@ set(HEADER_FILES
     graphics/particle_emit_queue.hpp
 
     audio/sound_asset.hpp
+    audio/sound_system.hpp
     audio/sound_source.hpp
 
     io/keyboard_controller.hpp

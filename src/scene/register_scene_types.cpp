@@ -8,6 +8,7 @@
 #include "graphics/sprite_system.hpp"
 #include "io/keyboard_controller.hpp"
 #include "physics/collider.hpp"
+#include "audio/sound_system.hpp"
 #include "physics/material.hpp"
 #include "physics/physics_system.hpp"
 #include "physics/rigidbody.hpp"
@@ -32,6 +33,8 @@ void registerSceneSystems(Device &device, Coordinator &ECS)
     ECS.registerSystem<ColliderSystem>();
     ECS.registerSystem<ConstraintSystem>();
     ECS.registerSystem<PhysicsSystem>();
+
+    ECS.registerSystem<SoundSystem>();
 
     ECS.registerSystem<ParticleSystem>();
     ECS.registerSystem<SpriteSystem>(std::ref(device));

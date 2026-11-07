@@ -5,6 +5,7 @@
 #include "core/coordinator.hpp"
 #include "graphics/particle_system.hpp"
 #include "graphics/sprite_system.hpp"
+#include "audio/sound_system.hpp"
 #include "graphics/animated_sprite_system.hpp"
 #include "graphics/camera.hpp"
 #include "graphics/render_systems/simple_render_system.hpp"
@@ -16,6 +17,7 @@
 #include "scene/register_scene_types.hpp"
 #include "scene_defs.hpp"
 #include "utils/time.hpp"
+#include "utils/benchmark.hpp"
 
 //  libs
 #define GLM_FORCE_RADIANS
@@ -78,6 +80,7 @@ void App::run()
     //  viewerObject.transform.translation.z = -2.5f;
 
     auto &physics_sys = *ECS.getSystem<PhysicsSystem>();
+    auto &sound_sys = *ECS.getSystem<SoundSystem>();
     auto &transform_sys = *ECS.getSystem<TransformSystem>();
     auto &rigidbody_sys = *ECS.getSystem<RigidbodySystem>();
     auto &constraint_sys = *ECS.getSystem<ConstraintSystem>();
@@ -97,6 +100,7 @@ void App::run()
 
     Stopwatch delta_clock;
     while(isAppRunning) {
+        EMP_BENCHMARK_FUNC();
 #if EMP_ENABLE_RENDER_THREAD
         std::unique_lock<std::mutex> lock(m_coordinator_access_mutex);
         Stopwatch waiting_clock;
@@ -112,6 +116,7 @@ void App::run()
 
         gui_manager.addUpdateTime(delta_time);
         onUpdate(delta_time, window, controller);
+        sound_sys.update();
         {
             assert(ECS.hasComponent<Transform>(viewer_object));
 
