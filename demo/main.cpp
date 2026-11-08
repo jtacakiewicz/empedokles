@@ -81,9 +81,7 @@ public:
               })
     {
     }
-    ~Demo() {
-        BenchmarkRegistry::get().print();
-    }
+    ~Demo() { BenchmarkRegistry::get().print(); }
 };
 void Demo::onSetup(Window &window, Device &device)
 {
@@ -164,7 +162,6 @@ void Demo::onSetup(Window &window, Device &device)
 
     ECS.getSystem<PhysicsSystem>()->gravity = { 0, 20000.f };
     ECS.getSystem<PhysicsSystem>()->substep_count = 16U;
-    this->setPhysicsTickrate(120.f);
     auto soundSystem = ECS.getSystem<SoundSystem>();
     SoundSource::create("sample", "assets/audio/fish.wav", AudioFileFormat::WAV);
     ECS.addComponent(protagonist.id, SoundSource("sample"));
