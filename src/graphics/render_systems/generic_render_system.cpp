@@ -1,4 +1,4 @@
-#include "simple_render_system.hpp"
+#include "generic_render_system.hpp"
 #include "core/coordinator.hpp"
 
 //  libs
@@ -15,20 +15,20 @@
 
 namespace emp {
 
-SimpleRenderSystem::SimpleRenderSystem(Device &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,
-                                       const char *vert_filename, const char *frag_filename, PipelineConfigInfo *config)
+GenericRenderSystem::GenericRenderSystem(Device &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout,
+                                         const char *vert_filename, const char *frag_filename, PipelineConfigInfo *config)
     : device { device }
 {
     createPipelineLayout(globalSetLayout);
     createPipeline(renderPass, vert_filename, frag_filename, config);
 }
 
-SimpleRenderSystem::~SimpleRenderSystem()
+GenericRenderSystem::~GenericRenderSystem()
 {
     vkDestroyPipelineLayout(device.device(), pipeline_layout, nullptr);
 }
 
-void SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout, size_t push_const_size)
+void GenericRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLayout, size_t push_const_size)
 {
 
     render_system_layout =
@@ -48,8 +48,8 @@ void SimpleRenderSystem::createPipelineLayout(VkDescriptorSetLayout globalSetLay
     }
 }
 
-void SimpleRenderSystem::createPipeline(VkRenderPass renderPass, const char *vert_filename, const char *frag_filename,
-                                        PipelineConfigInfo *config)
+void GenericRenderSystem::createPipeline(VkRenderPass renderPass, const char *vert_filename, const char *frag_filename,
+                                         PipelineConfigInfo *config)
 {
     assert(pipeline_layout != nullptr && "Cannot create pipeline before pipeline layout");
     PipelineConfigInfo pipelineConfig {};

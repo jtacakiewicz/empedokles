@@ -6,15 +6,15 @@
 #include "graphics/render_systems/particle_render_system.hpp"
 #include "graphics/renderer.hpp"
 #include "vulkan/descriptors.hpp"
-#include "graphics/render_systems/simple_render_system.hpp"
+#include "graphics/render_systems/generic_render_system.hpp"
 #include "compute/compute_manager.hpp"
 #include "scene/compute_demo.hpp"
 namespace emp {
 struct RendererContext {
     std::unique_ptr<DescriptorPool> globalPool;
     std::vector<std::unique_ptr<DescriptorPool>> frame_pools;
-    std::unique_ptr<SimpleRenderSystem> sprite_rend_sys;
-    std::unique_ptr<SimpleRenderSystem> model_rend_sys;
+    std::unique_ptr<GenericRenderSystem> sprite_rend_sys;
+    std::unique_ptr<GenericRenderSystem> model_rend_sys;
     std::unique_ptr<ParticleRenderSystem> particle_rend_sys;
 
     std::vector<std::unique_ptr<Buffer>> ubo_buffers;
@@ -58,11 +58,11 @@ struct RendererContext {
             PipelineConfigInfo debug_shape_pipeline_config;
             Pipeline::defaultPipelineConfigInfo(debug_shape_pipeline_config);
             Pipeline::enableAlphaBlending(debug_shape_pipeline_config);
-            model_rend_sys = std::make_unique<SimpleRenderSystem>(
+            model_rend_sys = std::make_unique<GenericRenderSystem>(
                 device, renderer.getSwapChainRenderPass(), global_set_layout->getDescriptorSetLayout(),
                 "assets/shaders/debug_shape.vert.spv", "assets/shaders/debug_shape.frag.spv", &debug_shape_pipeline_config);
         }
-        sprite_rend_sys = std::make_unique<SimpleRenderSystem>(
+        sprite_rend_sys = std::make_unique<GenericRenderSystem>(
             device, renderer.getSwapChainRenderPass(), global_set_layout->getDescriptorSetLayout(),
             "assets/shaders/sprite.vert.spv", "assets/shaders/sprite.frag.spv");
         particle_rend_sys = std::make_unique<ParticleRenderSystem>(

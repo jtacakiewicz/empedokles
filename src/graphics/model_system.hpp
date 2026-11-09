@@ -1,7 +1,7 @@
 #ifndef EMP_MODEL_SYSTEM_HPP
 #define EMP_MODEL_SYSTEM_HPP
 
-#include "graphics/render_systems/simple_render_system.hpp"
+#include "graphics/render_systems/generic_render_system.hpp"
 #include "model.hpp"
 #include "scene/transform.hpp"
 #include "texture.hpp"
@@ -26,7 +26,7 @@ class ModelSystem : public System<Transform, Model> {
 public:
     ModelSystem(Device &device);
 
-    void render(FrameInfo &frame_info, SimpleRenderSystem &simple_rend_system);
+    void render(FrameInfo &frame_info, GenericRenderSystem &simple_rend_system);
 
     [[nodiscard]] VkDescriptorBufferInfo getBufferInfoForGameObject(int frameIndex, Entity entity) const
     {

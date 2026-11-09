@@ -6,7 +6,7 @@
 #include <memory>
 #include "graphics/frame_info.hpp"
 #include "graphics/sprite_system.hpp"
-#include "graphics/render_systems/simple_render_system.hpp"
+#include "graphics/render_systems/generic_render_system.hpp"
 #include "graphics/texture.hpp"
 #include "utils/time.hpp"
 #include "vulkan/pipeline.hpp"
@@ -173,7 +173,7 @@ public:
         uboBuffers[frameIndex]->writeToBuffer(&data);
         uboBuffers[frameIndex]->unmap();
     }
-    void render(FrameInfo &frame_info, SimpleRenderSystem &simple_rend_system)
+    void render(FrameInfo &frame_info, GenericRenderSystem &simple_rend_system)
     {
         updateUBO(frame_info.frameIndex);
         static const std::set<Entity> singleton { 0 };

@@ -1,5 +1,5 @@
-#ifndef EMP_SIMPLE_RENDER_SYSTEM_HPP
-#define EMP_SIMPLE_RENDER_SYSTEM_HPP
+#ifndef EMP_GENERIC_RENDER_SYSTEM_HPP
+#define EMP_GENERIC_RENDER_SYSTEM_HPP
 
 #include "graphics/camera.hpp"
 #include "graphics/frame_info.hpp"
@@ -12,13 +12,13 @@
 #include <vector>
 
 namespace emp {
-class SimpleRenderSystem {
+class GenericRenderSystem {
 public:
-    SimpleRenderSystem(Device &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout, const char *frag_filename,
-                       const char *vert_filename, PipelineConfigInfo *config = nullptr);
-    ~SimpleRenderSystem();
-    SimpleRenderSystem(const SimpleRenderSystem &) = delete;
-    SimpleRenderSystem &operator=(const SimpleRenderSystem &) = delete;
+    GenericRenderSystem(Device &device, VkRenderPass renderPass, VkDescriptorSetLayout globalSetLayout, const char *frag_filename,
+                        const char *vert_filename, PipelineConfigInfo *config = nullptr);
+    ~GenericRenderSystem();
+    GenericRenderSystem(const GenericRenderSystem &) = delete;
+    GenericRenderSystem &operator=(const GenericRenderSystem &) = delete;
 
     template <class IterableObjects>
     void render(
@@ -38,7 +38,7 @@ private:
     std::unique_ptr<DescriptorSetLayout> render_system_layout;
 };
 template <class IterableObjects>
-void SimpleRenderSystem::render(
+void GenericRenderSystem::render(
     FrameInfo &frameInfo, IterableObjects &objects,
     std::function<VkDescriptorSet(DescriptorWriter &, int frame_idx, const typename IterableObjects::value_type &)> writeDesc,
     std::function<void(const VkCommandBuffer &, const typename IterableObjects::value_type &)> bindAndDraw)

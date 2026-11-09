@@ -27,7 +27,7 @@ set(SOURCE_FILES
 
     graphics/imgui/imgui_emp_impl.cpp
     # graphics/systems/point_light_system.cpp
-    graphics/render_systems/simple_render_system.cpp
+    graphics/render_systems/generic_render_system.cpp
     graphics/render_systems/particle_render_system.cpp
     gui/console.cpp
     gui/overlay.cpp
@@ -126,7 +126,7 @@ set(HEADER_FILES
 
     graphics/imgui/imgui_emp_impl.hpp
     # graphics/systems/point_light_system.hpp
-    graphics/render_systems/simple_render_system.hpp
+    graphics/render_systems/generic_render_system.hpp
     graphics/render_systems/particle_render_system.hpp
     gui/console.hpp
     gui/overlay.hpp

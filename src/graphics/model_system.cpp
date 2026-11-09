@@ -4,7 +4,7 @@
 #include <numeric>
 
 namespace emp {
-void ModelSystem::render(FrameInfo &frame_info, SimpleRenderSystem &simple_rend_system)
+void ModelSystem::render(FrameInfo &frame_info, GenericRenderSystem &simple_rend_system)
 {
     simple_rend_system.render(
         frame_info, this->entities,

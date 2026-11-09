@@ -1,7 +1,7 @@
 #ifndef EMP_SPRITE_SYSTEM_HPP
 #define EMP_SPRITE_SYSTEM_HPP
 #include "graphics/sprite.hpp"
-#include "graphics/render_systems/simple_render_system.hpp"
+#include "graphics/render_systems/generic_render_system.hpp"
 #include "scene/transform.hpp"
 #include "vulkan/swap_chain.hpp"
 namespace emp {
@@ -28,7 +28,7 @@ struct SpriteSystem : public System<Sprite, Transform> {
         return uboBuffers[frameIndex]->descriptorInfoForIndex(entity);
     }
 
-    void render(FrameInfo &frame_info, SimpleRenderSystem &simple_rend_system);
+    void render(FrameInfo &frame_info, GenericRenderSystem &simple_rend_system);
 
     void updateBuffer(int frameIndex);
     std::vector<std::unique_ptr<Buffer>> uboBuffers { SwapChain::MAX_FRAMES_IN_FLIGHT };

@@ -2,7 +2,7 @@
 #include "graphics/sprite_system.hpp"
 
 namespace emp {
-void AnimatedSpriteSystem::render(FrameInfo &frame_info, SimpleRenderSystem &simple_rend_system)
+void AnimatedSpriteSystem::render(FrameInfo &frame_info, GenericRenderSystem &simple_rend_system)
 {
     simple_rend_system.render(
         frame_info, this->entities,

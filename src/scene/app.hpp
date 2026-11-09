@@ -3,7 +3,7 @@
 #include "core/coordinator.hpp"
 #include "graphics/camera.hpp"
 #include "graphics/frame_info.hpp"
-#include "graphics/render_systems/simple_render_system.hpp"
+#include "graphics/render_systems/generic_render_system.hpp"
 #include "graphics/renderer.hpp"
 #include "gui/gui_manager.hpp"
 #include "scene/renderer_context.hpp"
