@@ -1,6 +1,6 @@
 #ifndef EMP_REGISTER_SCENE_TYPES_HPP
 #define EMP_REGISTER_SCENE_TYPES_HPP
-#include "audio/sound_source.hpp"
+#include "audio/sound.hpp"
 #include "core/coordinator.hpp"
 #include "graphics/animated_sprite.hpp"
 #include "graphics/model.hpp"

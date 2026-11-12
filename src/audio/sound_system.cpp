@@ -1,5 +1,4 @@
 #include "sound_system.hpp"
-#include "audio/sound_source.hpp"
 #include <cstring>
 namespace emp {
 void SoundSystem::update()

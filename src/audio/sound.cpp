@@ -1,4 +1,9 @@
-#include "sound_asset.hpp"
+#include <al.h>
+#include <AL/alc.h>
+
+#include "sound.hpp"
+#include "debug/log.hpp"
+
 #define DR_WAV_IMPLEMENTATION
 #include "dr_wav.h"
 #define DR_FLAC_IMPLEMENTATION
@@ -105,4 +110,50 @@ SoundAsset::~SoundAsset()
 {
     alDeleteBuffers(1, &m_buffer);
 }
-};
+
+AssetRegistry<SoundAsset> SoundSource::m_assets;
+
+void checkError()
+{
+    ALCenum error = alGetError();
+    if(error != AL_NO_ERROR) {
+        EMP_LOG(ERROR) << "Failed to play sound: " << error;
+    }
+}
+void SoundSource::create(std::string id, std::string filename, AudioFileFormat format)
+{
+    m_assets.create(id, filename, format);
+}
+SoundSource::SoundSource(std::string name)
+{
+    auto &sound_asset = m_assets.get(name);
+
+    alSourcei(m_source, AL_BUFFER, sound_asset.alBuffer());
+}
+
+void SoundSource::setRolloff(float rolloff)
+{
+    alSourcef(m_source, AL_ROLLOFF_FACTOR, rolloff);
+    checkError();
+}
+void SoundSource::setReferenceDistance(float ref_distance)
+{
+    alSourcef(m_source, AL_REFERENCE_DISTANCE, ref_distance);
+    checkError();
+}
+void SoundSource::setMaxDistance(float max_distance)
+{
+    alSourcef(m_source, AL_MAX_DISTANCE, max_distance);
+    checkError();
+}
+void SoundSource::play()
+{
+    alSourcePlay(m_source);
+    checkError();
+}
+void SoundSource::setPosition(vec3f pos)
+{
+    alSource3f(m_source, AL_POSITION, pos.x, pos.y, pos.z);
+    checkError();
+}
+}
