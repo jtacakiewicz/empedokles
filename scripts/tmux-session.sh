@@ -2,16 +2,8 @@
 
 SESSION_NAME="emp-dev"
 
-# Start a new tmux session with the first window running nvim
-tmux new-session -d -s $SESSION_NAME -n nvim "nix develop . -c nvim"
-
-
-# Create second window (idle)
+tmux new-session -d -s $SESSION_NAME -n nvim "nix develop . -c zsh" && tmux send-keys -t $SESSION_NAME:1 'nvim' Enter
 tmux new-window -t $SESSION_NAME:2 -n build "nix develop . -c zsh"
-
-# Create third window running lazygit
-tmux new-window -t $SESSION_NAME:3 -n lazygit 'lazygit'
-
-# Attach to session, starting in the first window
+tmux new-window -t $SESSION_NAME:3 -n lazygit 'nix develop . -c lazygit'
 tmux select-window -t $SESSION_NAME:1
 tmux attach -t $SESSION_NAME
