@@ -113,22 +113,33 @@ SoundAsset::~SoundAsset()
 
 AssetRegistry<SoundAsset> SoundSource::m_assets;
 
+#define EMP_CASE_LITERAL(x) case x: return #x;
+const char* getErr( ALCenum err) { 
+    switch(err) {
+        EMP_CASE_LITERAL(AL_NO_ERROR);
+        EMP_CASE_LITERAL(AL_INVALID_NAME);
+        EMP_CASE_LITERAL(AL_INVALID_ENUM);
+        EMP_CASE_LITERAL(AL_INVALID_VALUE);
+        EMP_CASE_LITERAL(AL_INVALID_OPERATION);
+        EMP_CASE_LITERAL(AL_OUT_OF_MEMORY);
+    }
+    return "unknown error";
+}
+#undef EMP_CASE_LITERAL
+
 void checkError()
 {
     ALCenum error = alGetError();
     if(error != AL_NO_ERROR) {
-        EMP_LOG(ERROR) << "Failed to play sound: " << error;
+        EMP_LOG(ERROR) << "Failed to play sound: " << getErr(error) << "(0x" << std::hex << error << ")";
     }
 }
 void SoundSource::create(std::string id, std::string filename, AudioFileFormat format)
 {
     m_assets.create(id, filename, format);
 }
-SoundSource::SoundSource(std::string name)
-{
-    auto &sound_asset = m_assets.get(name);
-
-    alSourcei(m_source, AL_BUFFER, sound_asset.alBuffer());
+SoundSource::SoundSource(std::string name) {
+    m_name = name;
 }
 
 void SoundSource::setRolloff(float rolloff)

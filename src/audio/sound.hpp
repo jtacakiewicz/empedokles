@@ -32,13 +32,14 @@ public:
     ~SoundAsset();
 };
 
-#define EMP_MAX_SOUND_SOURCES 1024U
+#define EMP_MAX_SOUND_SOURCES 256U
 class SoundSource {
 private:
     static AssetRegistry<SoundAsset> m_assets;
 
     void setPosition(vec3f pos);
 
+    std::string m_name;
     ALint m_source;
 
 public:

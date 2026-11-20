@@ -83,7 +83,6 @@ public:
 };
 void Demo::onSetup(Window &window, Device &device)
 {
-    Log::enableLoggingToCerr();
     gui_manager.alias(ECS.world(), "world_entity");
     ECS.registerSystem<MouseSelectionSystem>();
     ECS.getSystem<ColliderSystem>()->disableCollision(FRIENDLY, FRIENDLY);
@@ -160,7 +159,6 @@ void Demo::onSetup(Window &window, Device &device)
 
     ECS.getSystem<PhysicsSystem>()->gravity = { 0, 20000.f };
     ECS.getSystem<PhysicsSystem>()->substep_count = 16U;
-    auto soundSystem = ECS.getSystem<SoundSystem>();
     SoundSource::create("sample", "assets/audio/fish.wav", AudioFileFormat::WAV);
     ECS.addComponent(protagonist.id, SoundSource("sample"));
     ECS.getComponent<SoundSource>(protagonist.id)->setRolloff(100.f);
@@ -336,6 +334,7 @@ void Demo::onUpdate(const float delta_time, Window &window, KeyboardController &
 }
 int main()
 {
+    Log::enableLoggingToCerr();
     {
         Demo demo;
         demo.run();
